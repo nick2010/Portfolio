@@ -12,14 +12,15 @@ const PORTFOLIO_CONFIG = {
   location: "Gujarat, India"
 };
 
-// 6 Core Business Categories
+// 7 Core Business Categories
 const PORTFOLIO_CATEGORIES = [
-  { id: "luxury", name: "Luxury & Watches", icon: "✨", count: 3 },
-  { id: "fabrics", name: "Fabrics & Fashion", icon: "👗", count: 8 },
-  { id: "auto", name: "Cars & Showrooms", icon: "🚗", count: 4 },
-  { id: "factory", name: "Factory & Process", icon: "🏭", count: 7 },
-  { id: "furniture", name: "Furniture & Interior", icon: "🛋️", count: 11 },
-  { id: "lifestyle", name: "Explainers & Lifestyle", icon: "🗣️", count: 8 }
+  { id: "luxury", name: "Luxury & Watches", icon: "✨" },
+  { id: "fabrics", name: "Fabrics & Fashion", icon: "👗" },
+  { id: "auto", name: "Cars & Showrooms", icon: "🚗" },
+  { id: "factory", name: "Factory & Process", icon: "🏭" },
+  { id: "furniture", name: "Furniture & Interior", icon: "🛋️" },
+  { id: "explainer", name: "Talking Head & Explainers", icon: "🗣️" },
+  { id: "lifestyle", name: "Lifestyle, Pets & Events", icon: "🐾" }
 ];
 
 // All 41 Unlisted Client Videos
@@ -342,11 +343,11 @@ const ALL_VIDEOS = [
   },
 
   // -------------------------------------------------------------------------
-  // 6. EXPLAINERS, PETS & LIFESTYLE (8 Videos)
+  // 6. TALKING HEAD & EXPLAINERS (3 Videos)
   // -------------------------------------------------------------------------
   {
     id: 34,
-    category: "lifestyle",
+    category: "explainer",
     title: "PVC Furniture Waterproof Explainer",
     client: "Shiv PVC Furniture",
     tag: "Founder Explainer",
@@ -355,7 +356,7 @@ const ALL_VIDEOS = [
   },
   {
     id: 35,
-    category: "lifestyle",
+    category: "explainer",
     title: "Furniture Founder Explainer (Talking Head)",
     client: "Furniture Manufacturer",
     tag: "Talking Head",
@@ -364,13 +365,17 @@ const ALL_VIDEOS = [
   },
   {
     id: 36,
-    category: "lifestyle",
+    category: "explainer",
     title: "PVC Material Breakdown Explainer",
     client: "Interior Manufacturer",
     tag: "Material Explainer",
     youtubeId: "aEx_oCeGoQQ",
     description: "Educational comparison showing why PVC outlasts traditional plywood in humid climates."
   },
+
+  // -------------------------------------------------------------------------
+  // 7. LIFESTYLE, PETS & EVENTS (5 Videos)
+  // -------------------------------------------------------------------------
   {
     id: 37,
     category: "lifestyle",
