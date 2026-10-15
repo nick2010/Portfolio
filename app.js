@@ -42,7 +42,7 @@ function initWhatsAppLinks() {
 
   // Pricing buttons
   setHref("pricingCard1Btn", "Hi Jay! I'm interested in ordering a single reel (₹2,000 package) with 1 free revision.");
-  setHref("pricingCard2Btn", "Hi Jay! I'm interested in the Monthly Pack (8 to 15 reels/month). What are the package rates?");
+  setHref("pricingCard2Btn", "Hi Jay! I'm interested in the Monthly Pack (4 to 10 reels/month). What are the package rates?");
   setHref("pricingCard3Btn", "Hi Jay! I want to discuss a custom factory tour / commercial video editing project.");
 }
 
