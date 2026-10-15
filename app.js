@@ -1,14 +1,14 @@
 /**
  * =========================================================================
- * JAYEDITS - 41-VIDEO SMARTPHONE REEL CONTROLLER
- * Ultra-Fast Category Switching & 9:16 Interactive Video Player
+ * JAYEDITS - PEEK-AHEAD SWIPABLE REEL DECK & THUMB DOCK CONTROLLER
+ * Seamless Horizontal Reel Deck, Chapter Transitions & Category Drawer
  * =========================================================================
  */
 
-let currentCatIndex = 0;
-let currentVideoIndexInCat = 0;
-let touchStartX = 0;
-let touchEndX = 0;
+let allDeckCards = [];
+let activeCardIndex = 0;
+let activePlayingCard = null;
+let isScrollThrottled = false;
 
 document.addEventListener("DOMContentLoaded", () => {
   initPortfolioApp();
@@ -16,7 +16,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function initPortfolioApp() {
   initWhatsAppLinks();
-  initShowcase();
+  buildDeckCardData();
+  initDeckShowcase();
+  initCatDrawer();
   initFaqAccordion();
   setCurrentYear();
 }
@@ -45,348 +47,440 @@ function initWhatsAppLinks() {
 }
 
 /**
- * Initialize 41-Video Smartphone Showcase
+ * Build complete sequence of 41 video cards + 6 chapter transition cards
  */
-function initShowcase() {
-  renderCategoryPills();
-  switchCategory(0, false);
-  attachShowcaseEvents();
-}
+function buildDeckCardData() {
+  allDeckCards = [];
+  const verticalCats = PORTFOLIO_CATEGORIES.filter(c => c.id !== "all");
 
-/**
- * Get active category object and its videos
- */
-function getActiveCategory() {
-  return PORTFOLIO_CATEGORIES[currentCatIndex] || PORTFOLIO_CATEGORIES[0];
-}
+  verticalCats.forEach((cat, catIndex) => {
+    const catVideos = ALL_VIDEOS.filter(v => v.category === cat.id);
 
-function getVideosInActiveCategory() {
-  const activeCat = getActiveCategory();
-  if (!activeCat || activeCat.id === "all") {
-    return ALL_VIDEOS;
-  }
-  return ALL_VIDEOS.filter(v => v.category === activeCat.id);
-}
+    // Concept 4: Chapter Transition Card between categories (starting from 2nd category)
+    if (catIndex > 0) {
+      allDeckCards.push({
+        type: "chapter",
+        category: cat,
+        videoCount: catVideos.length
+      });
+    }
 
-function getActiveVideo() {
-  const videos = getVideosInActiveCategory();
-  return videos[currentVideoIndexInCat] || videos[0];
-}
-
-/**
- * Render Category Navigation Pills (with real counts)
- */
-function renderCategoryPills() {
-  const container = document.getElementById("reelsPillNav");
-  if (!container) return;
-
-  container.innerHTML = PORTFOLIO_CATEGORIES.map((cat, index) => {
-    const count = cat.id === "all" ? ALL_VIDEOS.length : ALL_VIDEOS.filter(v => v.category === cat.id).length;
-    return `
-      <button class="reel-nav-pill ${index === currentCatIndex ? 'active' : ''}" data-cat-index="${index}">
-        <span>${cat.icon}</span>
-        <span>${cat.name}</span>
-        <span class="reel-pill-count">${count}</span>
-      </button>
-    `;
-  }).join("");
-
-  container.querySelectorAll(".reel-nav-pill").forEach(pill => {
-    pill.addEventListener("click", () => {
-      const idx = parseInt(pill.getAttribute("data-cat-index"), 10);
-      switchCategory(idx, false);
+    // Video cards for this category
+    catVideos.forEach((v, vIndex) => {
+      allDeckCards.push({
+        type: "video",
+        video: v,
+        category: cat,
+        indexInCat: vIndex,
+        totalInCat: catVideos.length
+      });
     });
   });
 }
 
 /**
- * Switch Active Category
+ * Initialize Peek-Ahead Swipable Deck Showcase
  */
-function switchCategory(newCatIndex, autoPlay = false) {
-  if (newCatIndex < 0) newCatIndex = PORTFOLIO_CATEGORIES.length - 1;
-  if (newCatIndex >= PORTFOLIO_CATEGORIES.length) newCatIndex = 0;
+function initDeckShowcase() {
+  renderDeckTrack();
+  attachDeckEvents();
+  setActiveCard(0, false);
+}
 
-  currentCatIndex = newCatIndex;
-  currentVideoIndexInCat = 0; // Reset to first video in this category
+/**
+ * Render all 47 cards in the horizontal scroll-snap deck
+ */
+function renderDeckTrack() {
+  const track = document.getElementById("reelDeckTrack");
+  if (!track) return;
 
-  // 1. Update Top Pills
-  const pills = document.querySelectorAll(".reel-nav-pill");
-  pills.forEach((p, idx) => {
-    if (idx === currentCatIndex) p.classList.add("active");
-    else p.classList.remove("active");
+  track.innerHTML = allDeckCards.map((item, index) => {
+    if (item.type === "chapter") {
+      return `
+        <div class="chapter-card ${index === 0 ? 'active' : ''}" data-deck-index="${index}" data-cat-id="${item.category.id}">
+          <div class="chapter-icon-halo">${item.category.icon}</div>
+          <span class="chapter-eyebrow">UP NEXT</span>
+          <h3 class="chapter-title">${escapeHtml(item.category.name)}</h3>
+          <span class="chapter-count">${item.videoCount} Client Reels</span>
+          <button class="chapter-action-btn" type="button">
+            <span>Explore Category</span> <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="reel-card ${index === 0 ? 'active' : ''}" data-deck-index="${index}" data-video-id="${item.video.id}" data-cat-id="${item.category.id}">
+        ${renderVideoCardInner(item)}
+      </div>
+    `;
+  }).join("");
+}
+
+/**
+ * Render inner content of a video card (Thumbnail + overlays)
+ */
+function renderVideoCardInner(item) {
+  const thumbUrl = `https://img.youtube.com/vi/${item.video.youtubeId}/hqdefault.jpg`;
+  
+  // Render story progress bars at top of card
+  let storyBarsHtml = "";
+  if (item.totalInCat <= 12) {
+    const segments = [];
+    for (let i = 0; i < item.totalInCat; i++) {
+      let status = "";
+      if (i < item.indexInCat) status = "viewed";
+      else if (i === item.indexInCat) status = "active";
+      segments.push(`<div class="reel-card-segment ${status}"></div>`);
+    }
+    storyBarsHtml = `<div class="reel-card-story">${segments.join("")}</div>`;
+  }
+
+  return `
+    <img class="reel-card-thumb" src="${thumbUrl}" alt="${escapeHtml(item.video.title)}" loading="lazy" />
+    ${storyBarsHtml}
+    <div class="reel-card-badge">
+      <span>${item.category.icon}</span>
+      <span>${escapeHtml(item.video.tag || item.category.name)}</span>
+    </div>
+    <div class="reel-card-overlay">
+      <div class="reel-card-play-btn" title="Play Video with sound">
+        <i class="fa-solid fa-play"></i>
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * Set active card by deck index and update dock + info card
+ */
+function setActiveCard(newIndex, scrollIntoView = true) {
+  if (newIndex < 0 || newIndex >= allDeckCards.length) return;
+
+  const track = document.getElementById("reelDeckTrack");
+  if (!track) return;
+
+  const cards = track.querySelectorAll(".reel-card, .chapter-card");
+  const previousCard = cards[activeCardIndex];
+  const targetCard = cards[newIndex];
+
+  // If previous card was playing video, restore its thumbnail preview
+  if (previousCard && previousCard !== targetCard && activePlayingCard === previousCard) {
+    restoreCardThumbnail(previousCard);
+  }
+
+  activeCardIndex = newIndex;
+
+  // Update card active classes
+  cards.forEach((card, idx) => {
+    card.classList.toggle("active", idx === activeCardIndex);
   });
 
-  // 2. Update In-Card Category Stepper Name
-  const activeCat = getActiveCategory();
-  const activeCatName = document.getElementById("activeCatName");
-  if (activeCatName) {
-    activeCatName.textContent = `${activeCat.icon} ${activeCat.name}`;
+  if (scrollIntoView && targetCard) {
+    targetCard.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
   }
 
-  // 3. Render Story Bars, Thumbnails & Load Video
-  renderStoryBars();
-  renderUpNextStrip();
-  loadCurrentVideo(autoPlay);
-}
+  // Update Thumb-Zone Dock & Details
+  const currentItem = allDeckCards[activeCardIndex];
+  if (!currentItem) return;
 
-/**
- * Render Instagram Story Progress Bars at Top of Phone
- */
-function renderStoryBars() {
-  const bar = document.getElementById("storyProgressBar");
-  if (!bar) return;
+  const dockCatIcon = document.getElementById("dockCatIcon");
+  const dockCatText = document.getElementById("dockCatText");
+  const dockCatCount = document.getElementById("dockCatCount");
 
-  const videos = getVideosInActiveCategory();
-  if (videos.length <= 12) {
-    bar.innerHTML = videos.map((_, index) => {
-      let status = "";
-      if (index < currentVideoIndexInCat) status = "viewed";
-      else if (index === currentVideoIndexInCat) status = "active";
-      return `<div class="story-segment ${status}" data-video-index="${index}"></div>`;
-    }).join("");
-  } else {
-    // Continuous progress bar for "All 41 Reels" view
-    const pct = Math.max(4, Math.round(((currentVideoIndexInCat + 1) / videos.length) * 100));
-    bar.innerHTML = `<div class="story-continuous-fill" style="width: ${pct}%;"></div>`;
-  }
-}
+  const clientTag = document.getElementById("deckClientTag");
+  const title = document.getElementById("deckReelTitle");
+  const desc = document.getElementById("deckReelDesc");
+  const whatsappBtn = document.getElementById("deckWhatsappBtn");
 
-/**
- * Render Visual "Up Next" Thumbnail Strip (Passes the Dad Test!)
- */
-function renderUpNextStrip() {
-  const strip = document.getElementById("upNextStrip");
-  if (!strip) return;
+  if (currentItem.type === "video") {
+    if (dockCatIcon) dockCatIcon.textContent = currentItem.category.icon;
+    if (dockCatText) dockCatText.textContent = currentItem.category.name;
+    if (dockCatCount) dockCatCount.textContent = `${currentItem.indexInCat + 1}/${currentItem.totalInCat}`;
 
-  const videos = getVideosInActiveCategory();
-  const activeCat = getActiveCategory();
+    if (clientTag) clientTag.textContent = `Client: ${currentItem.video.client}`;
+    if (title) title.textContent = currentItem.video.title;
+    if (desc) desc.textContent = currentItem.video.description;
 
-  // Update header text based on active category
-  const titleEl = document.getElementById("upNextTitle");
-  if (titleEl) {
-    if (activeCat.id === "all") {
-      titleEl.textContent = `All 41 Client Reels (${videos.length})`;
-    } else {
-      titleEl.textContent = `${activeCat.icon} ${activeCat.name} (${videos.length})`;
+    if (whatsappBtn) {
+      const customMsg = `Hi Jay! I saw your portfolio reel: "${currentItem.video.title}" (${currentItem.video.client}). I want a similar video for my business. Can we talk?`;
+      whatsappBtn.href = `https://wa.me/${PORTFOLIO_CONFIG.whatsappNumber}?text=${encodeURIComponent(customMsg)}`;
+    }
+  } else if (currentItem.type === "chapter") {
+    if (dockCatIcon) dockCatIcon.textContent = currentItem.category.icon;
+    if (dockCatText) dockCatText.textContent = `Up Next: ${currentItem.category.name}`;
+    if (dockCatCount) dockCatCount.textContent = `${currentItem.videoCount} Reels`;
+
+    if (clientTag) clientTag.textContent = "Industry Showcase";
+    if (title) title.textContent = currentItem.category.name;
+    if (desc) desc.textContent = `Swipe or tap to explore ${currentItem.videoCount} real client reels in ${currentItem.category.name}.`;
+
+    if (whatsappBtn) {
+      const customMsg = `Hi Jay! I'm interested in video editing for ${currentItem.category.name}. Can we discuss pricing?`;
+      whatsappBtn.href = `https://wa.me/${PORTFOLIO_CONFIG.whatsappNumber}?text=${encodeURIComponent(customMsg)}`;
     }
   }
 
-  strip.innerHTML = videos.map((v, index) => {
-    const isActive = index === currentVideoIndexInCat;
-    const catObj = PORTFOLIO_CATEGORIES.find(c => c.id === v.category) || { icon: "🎬", name: "Reel" };
-    const thumbUrl = `https://img.youtube.com/vi/${v.youtubeId}/hqdefault.jpg`;
+  // Highlight active category in the bottom drawer
+  updateActiveDrawerCard(currentItem.category.id);
+}
 
-    return `
-      <div class="up-next-card ${isActive ? 'active' : ''}" data-video-index="${index}" data-video-id="${v.id}" title="${escapeHtml(v.title)}">
-        <img src="${thumbUrl}" alt="${escapeHtml(v.title)}" loading="lazy" />
-        <div class="up-next-overlay">
-          <span class="card-top-badge">${isActive ? '<i class="fa-solid fa-play"></i> NOW' : `#${index + 1}`}</span>
-          <div class="card-bottom-info">
-            <span class="card-cat-tag">${catObj.icon} ${v.client || catObj.name}</span>
-            <span class="card-title-text">${escapeHtml(v.title)}</span>
-          </div>
+/**
+ * Play video inside active card
+ */
+function playVideoInCard(cardEl, video) {
+  if (activePlayingCard && activePlayingCard !== cardEl) {
+    restoreCardThumbnail(activePlayingCard);
+  }
+
+  activePlayingCard = cardEl;
+  cardEl.innerHTML = `
+    <iframe 
+      src="https://www.youtube-nocookie.com/embed/${video.youtubeId}?autoplay=1&rel=0&modestbranding=1&playsinline=1" 
+      title="${escapeHtml(video.title)}" 
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" 
+      allowfullscreen>
+    </iframe>
+  `;
+}
+
+/**
+ * Restore card to its static thumbnail preview
+ */
+function restoreCardThumbnail(cardEl) {
+  const idx = parseInt(cardEl.getAttribute("data-deck-index"), 10);
+  const item = allDeckCards[idx];
+  if (!item || item.type !== "video") return;
+
+  cardEl.innerHTML = renderVideoCardInner(item);
+  if (activePlayingCard === cardEl) {
+    activePlayingCard = null;
+  }
+}
+
+/**
+ * Attach events for Carousel, Dock buttons & Keyboard
+ */
+function attachDeckEvents() {
+  const track = document.getElementById("reelDeckTrack");
+  if (!track) return;
+
+  // 1. Scroll-snap listener with requestAnimationFrame
+  track.addEventListener("scroll", () => {
+    if (!isScrollThrottled) {
+      isScrollThrottled = true;
+      requestAnimationFrame(() => {
+        onDeckScroll();
+        isScrollThrottled = false;
+      });
+    }
+  }, { passive: true });
+
+  // 2. Click events on cards
+  track.addEventListener("click", (e) => {
+    const cardEl = e.target.closest(".reel-card, .chapter-card");
+    if (!cardEl) return;
+
+    const idx = parseInt(cardEl.getAttribute("data-deck-index"), 10);
+    const item = allDeckCards[idx];
+    if (!item) return;
+
+    if (item.type === "video") {
+      if (idx === activeCardIndex) {
+        // Tapped centered active card -> play video!
+        playVideoInCard(cardEl, item.video);
+      } else {
+        // Tapped peeking card -> scroll it into center!
+        setActiveCard(idx, true);
+      }
+    } else if (item.type === "chapter") {
+      // Tapped chapter card -> advance to next card (the first video of chapter)
+      setActiveCard(idx + 1, true);
+    }
+  });
+
+  // 3. Thumb-Zone Dock Previous / Next Industry
+  const dockPrevBtn = document.getElementById("dockPrevBtn");
+  const dockNextBtn = document.getElementById("dockNextBtn");
+  const dockCatTrigger = document.getElementById("dockCatTrigger");
+
+  if (dockPrevBtn) {
+    dockPrevBtn.addEventListener("click", () => {
+      jumpToAdjacentCategory(-1);
+    });
+  }
+
+  if (dockNextBtn) {
+    dockNextBtn.addEventListener("click", () => {
+      jumpToAdjacentCategory(1);
+    });
+  }
+
+  if (dockCatTrigger) {
+    dockCatTrigger.addEventListener("click", () => {
+      toggleCatDrawer(true);
+    });
+  }
+
+  // 4. Keyboard Arrow Navigation
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") {
+      if (activeCardIndex < allDeckCards.length - 1) setActiveCard(activeCardIndex + 1, true);
+    } else if (e.key === "ArrowLeft") {
+      if (activeCardIndex > 0) setActiveCard(activeCardIndex - 1, true);
+    } else if (e.key === "ArrowUp") {
+      jumpToAdjacentCategory(-1);
+    } else if (e.key === "ArrowDown") {
+      jumpToAdjacentCategory(1);
+    } else if (e.key === "Escape") {
+      toggleCatDrawer(false);
+    }
+  });
+}
+
+/**
+ * Detect centered card on scroll
+ */
+function onDeckScroll() {
+  const track = document.getElementById("reelDeckTrack");
+  if (!track) return;
+
+  const trackCenter = track.scrollLeft + track.offsetWidth / 2;
+  const cards = track.querySelectorAll(".reel-card, .chapter-card");
+
+  let closestIndex = activeCardIndex;
+  let minDiff = Infinity;
+
+  cards.forEach(card => {
+    const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+    const diff = Math.abs(trackCenter - cardCenter);
+    if (diff < minDiff) {
+      minDiff = diff;
+      closestIndex = parseInt(card.getAttribute("data-deck-index"), 10);
+    }
+  });
+
+  if (closestIndex !== activeCardIndex) {
+    setActiveCard(closestIndex, false);
+  }
+}
+
+/**
+ * Jump to previous or next business industry
+ */
+function jumpToAdjacentCategory(direction) {
+  const verticalCats = PORTFOLIO_CATEGORIES.filter(c => c.id !== "all");
+  const currentItem = allDeckCards[activeCardIndex];
+  if (!currentItem) return;
+
+  const currentCatId = currentItem.category.id;
+  const currentCatIdx = verticalCats.findIndex(c => c.id === currentCatId);
+  let nextCatIdx = currentCatIdx + direction;
+
+  if (nextCatIdx < 0) nextCatIdx = verticalCats.length - 1;
+  if (nextCatIdx >= verticalCats.length) nextCatIdx = 0;
+
+  const targetCat = verticalCats[nextCatIdx];
+  jumpToCategory(targetCat.id);
+}
+
+/**
+ * Jump directly to a specific category
+ */
+function jumpToCategory(categoryId) {
+  if (categoryId === "all") {
+    setActiveCard(0, true);
+    return;
+  }
+
+  // Find the first video card belonging to this category
+  const targetIndex = allDeckCards.findIndex(item => item.type === "video" && item.category.id === categoryId);
+  if (targetIndex !== -1) {
+    setActiveCard(targetIndex, true);
+  }
+}
+
+/**
+ * Initialize Category Bottom Drawer
+ */
+function initCatDrawer() {
+  const grid = document.getElementById("catDrawerGrid");
+  const backdrop = document.getElementById("catDrawerBackdrop");
+  const closeBtn = document.getElementById("catDrawerClose");
+
+  if (!grid) return;
+
+  // 1. Featured "All 41 Client Reels" card
+  const allReelsHtml = `
+    <div class="cat-drawer-card cat-drawer-card-featured" data-cat-id="all">
+      <div class="cat-drawer-card-left">
+        <span class="cat-drawer-card-icon">🎬</span>
+        <div>
+          <div class="cat-drawer-card-name">All 41 Client Reels</div>
+          <div style="font-size: 0.72rem; opacity: 0.8;">Continuous stream across 7 industries</div>
         </div>
+      </div>
+      <span class="cat-drawer-card-count">41</span>
+    </div>
+  `;
+
+  // 2. Specific industry cards
+  const verticalCats = PORTFOLIO_CATEGORIES.filter(c => c.id !== "all");
+  const catCardsHtml = verticalCats.map(cat => {
+    const count = ALL_VIDEOS.filter(v => v.category === cat.id).length;
+    return `
+      <div class="cat-drawer-card" data-cat-id="${cat.id}">
+        <div class="cat-drawer-card-left">
+          <span class="cat-drawer-card-icon">${cat.icon}</span>
+          <span class="cat-drawer-card-name">${escapeHtml(cat.name)}</span>
+        </div>
+        <span class="cat-drawer-card-count">${count}</span>
       </div>
     `;
   }).join("");
 
-  // Attach tap event to each thumbnail
-  strip.querySelectorAll(".up-next-card").forEach(card => {
+  grid.innerHTML = allReelsHtml + catCardsHtml;
+
+  // Card clicks in drawer
+  grid.querySelectorAll(".cat-drawer-card").forEach(card => {
     card.addEventListener("click", () => {
-      const idx = parseInt(card.getAttribute("data-video-index"), 10);
-      currentVideoIndexInCat = idx;
-      loadCurrentVideo(true);
+      const catId = card.getAttribute("data-cat-id");
+      jumpToCategory(catId);
+      toggleCatDrawer(false);
     });
   });
 
-  scrollActiveThumbnailIntoView();
+  if (backdrop) backdrop.addEventListener("click", () => toggleCatDrawer(false));
+  if (closeBtn) closeBtn.addEventListener("click", () => toggleCatDrawer(false));
 }
 
 /**
- * Center the active thumbnail in the horizontal strip
+ * Toggle open/close state of Category Bottom Drawer
  */
-function scrollActiveThumbnailIntoView() {
-  const strip = document.getElementById("upNextStrip");
-  if (!strip) return;
-  const activeCard = strip.querySelector(`.up-next-card[data-video-index="${currentVideoIndexInCat}"]`);
-  if (activeCard) {
-    activeCard.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-  }
-}
+function toggleCatDrawer(open) {
+  const drawer = document.getElementById("catDrawer");
+  const backdrop = document.getElementById("catDrawerBackdrop");
+  const indicator = document.querySelector(".dock-arrow-indicator");
 
-/**
- * Load Active Video into Phone Frame
- */
-function loadCurrentVideo(autoPlay = false) {
-  const video = getActiveVideo();
-  const activeCat = getActiveCategory();
-  const videosInCat = getVideosInActiveCategory();
-
-  if (!video) return;
-
-  // 1. Update Story Bars
-  renderStoryBars();
-
-  // 2. Update Phone Floating Badge
-  const badgeIcon = document.getElementById("badgeIcon");
-  const badgeText = document.getElementById("badgeText");
-  const catObj = PORTFOLIO_CATEGORIES.find(c => c.id === video.category) || activeCat;
-  if (badgeIcon) badgeIcon.textContent = catObj.icon;
-  if (badgeText) badgeText.textContent = video.tag || catObj.name;
-
-  // 3. Update Video Screen (Clean YouTube Embed - 100% controls work natively!)
-  const screen = document.getElementById("phoneScreen");
-  if (screen) {
-    if (autoPlay) {
-      screen.innerHTML = `
-        <iframe 
-          src="https://www.youtube-nocookie.com/embed/${video.youtubeId}?autoplay=1&rel=0&modestbranding=1&playsinline=1" 
-          title="${escapeHtml(video.title)}" 
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" 
-          allowfullscreen>
-        </iframe>
-      `;
-    } else {
-      const thumbUrl = `https://img.youtube.com/vi/${video.youtubeId}/hqdefault.jpg`;
-      screen.innerHTML = `
-        <div class="phone-preview-box" id="phonePreviewBox">
-          <img src="${thumbUrl}" alt="${escapeHtml(video.title)}" />
-          <div class="phone-preview-overlay">
-            <div class="phone-play-btn">
-              <i class="fa-solid fa-play"></i>
-            </div>
-          </div>
-        </div>
-      `;
-
-      const previewBox = document.getElementById("phonePreviewBox");
-      if (previewBox) {
-        previewBox.addEventListener("click", () => {
-          loadCurrentVideo(true);
-        });
-      }
-    }
-  }
-
-  // 4. Update Video Metadata Card & Bottom Navigation Counter
-  const clientTag = document.getElementById("reelClientTag");
-  const title = document.getElementById("reelTitle");
-  const desc = document.getElementById("reelDesc");
-  const counter = document.getElementById("reelCounter");
-  const whatsappBtn = document.getElementById("reelWhatsappBtn");
-  const hintEl = document.getElementById("showcaseHint");
-
-  if (clientTag) clientTag.textContent = `Client: ${video.client}`;
-  if (title) title.textContent = video.title;
-  if (desc) desc.textContent = video.description;
-  
-  if (counter) {
-    counter.textContent = `${currentVideoIndexInCat + 1} of ${videosInCat.length}`;
-  }
-
-  if (hintEl) {
-    hintEl.innerHTML = `
-      <i class="fa-solid fa-play"></i> 
-      <span>Tap <strong>Next Video</strong> or tap any thumbnail below • <strong>Reel ${currentVideoIndexInCat + 1} of ${videosInCat.length} in ${escapeHtml(activeCat.name)}</strong></span>
-    `;
-  }
-
-  // 5. Update active thumbnail state in Up Next strip
-  const strip = document.getElementById("upNextStrip");
-  if (strip) {
-    strip.querySelectorAll(".up-next-card").forEach(c => {
-      const cIdx = parseInt(c.getAttribute("data-video-index"), 10);
-      const isNowActive = cIdx === currentVideoIndexInCat;
-      c.classList.toggle("active", isNowActive);
-      const badge = c.querySelector(".card-top-badge");
-      if (badge) {
-        badge.innerHTML = isNowActive ? '<i class="fa-solid fa-play"></i> NOW' : `#${cIdx + 1}`;
-      }
-    });
-    scrollActiveThumbnailIntoView();
-  }
-
-  // 6. Pre-fill WhatsApp CTA with this exact video title
-  if (whatsappBtn) {
-    const customMsg = `Hi Jay! I saw your portfolio video: "${video.title}" (${video.client}). I want a similar video for my business. Can we talk?`;
-    whatsappBtn.href = `https://wa.me/${PORTFOLIO_CONFIG.whatsappNumber}?text=${encodeURIComponent(customMsg)}`;
-  }
-}
-
-/**
- * Navigate to Next Video (Continuous cross-category playback)
- */
-function nextVideo(autoPlay = true) {
-  const videos = getVideosInActiveCategory();
-  if (currentVideoIndexInCat < videos.length - 1) {
-    currentVideoIndexInCat++;
-    loadCurrentVideo(autoPlay);
-  } else {
-    // Seamless cross-category auto-advance:
-    if (PORTFOLIO_CATEGORIES[currentCatIndex].id !== "all") {
-      let nextCat = currentCatIndex + 1;
-      if (nextCat >= PORTFOLIO_CATEGORIES.length) nextCat = 1; // loop back to first vertical
-      switchCategory(nextCat, autoPlay);
-    } else {
-      currentVideoIndexInCat = 0;
-      loadCurrentVideo(autoPlay);
+  if (drawer && backdrop) {
+    drawer.classList.toggle("active", open);
+    backdrop.classList.toggle("active", open);
+    drawer.setAttribute("aria-hidden", !open);
+    if (indicator) {
+      indicator.style.transform = open ? "rotate(180deg)" : "rotate(0deg)";
     }
   }
 }
 
 /**
- * Navigate to Previous Video
+ * Highlight active category inside bottom drawer
  */
-function prevVideo(autoPlay = true) {
-  const videos = getVideosInActiveCategory();
-  if (currentVideoIndexInCat > 0) {
-    currentVideoIndexInCat--;
-    loadCurrentVideo(autoPlay);
-  } else {
-    // Seamless cross-category reverse
-    if (PORTFOLIO_CATEGORIES[currentCatIndex].id !== "all") {
-      let prevCat = currentCatIndex - 1;
-      if (prevCat < 1) prevCat = PORTFOLIO_CATEGORIES.length - 1;
-      switchCategory(prevCat, autoPlay);
-      currentVideoIndexInCat = getVideosInActiveCategory().length - 1;
-      loadCurrentVideo(autoPlay);
-    } else {
-      currentVideoIndexInCat = videos.length - 1;
-      loadCurrentVideo(autoPlay);
-    }
-  }
-}
-
-/**
- * Attach Event Listeners (Nav Buttons, Steppers, Keyboard)
- */
-function attachShowcaseEvents() {
-  // 1. Clean Navigation Bar Under Video
-  const nextBtn = document.getElementById("nextReelBtn");
-  const prevBtn = document.getElementById("prevReelBtn");
-  if (nextBtn) nextBtn.addEventListener("click", () => nextVideo(true));
-  if (prevBtn) prevBtn.addEventListener("click", () => prevVideo(true));
-
-  // 2. In-Card Category Stepper (Prev / Next Industry)
-  const prevCatBtn = document.getElementById("prevCatBtn");
-  const nextCatBtn = document.getElementById("nextCatBtn");
-  if (prevCatBtn) {
-    prevCatBtn.addEventListener("click", () => {
-      switchCategory(currentCatIndex - 1, false);
-    });
-  }
-  if (nextCatBtn) {
-    nextCatBtn.addEventListener("click", () => {
-      switchCategory(currentCatIndex + 1, false);
-    });
-  }
-
-  // 3. Keyboard Arrow Navigation
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowRight") nextVideo(true);
-    if (e.key === "ArrowLeft") prevVideo(true);
-    if (e.key === "ArrowUp") switchCategory(currentCatIndex - 1, false);
-    if (e.key === "ArrowDown") switchCategory(currentCatIndex + 1, false);
+function updateActiveDrawerCard(activeCatId) {
+  const grid = document.getElementById("catDrawerGrid");
+  if (!grid) return;
+  grid.querySelectorAll(".cat-drawer-card").forEach(card => {
+    const cId = card.getAttribute("data-cat-id");
+    card.classList.toggle("active", cId === activeCatId);
   });
 }
 

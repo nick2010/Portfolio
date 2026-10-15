@@ -97,90 +97,83 @@
     </div>
   </section>
 
-  <!-- Interactive Single Reel Phone Showcase (One Video at a Time) -->
+  <!-- Interactive Swipable Reel Deck Showcase (Peek-Ahead Carousel + Thumb Dock) -->
   <section id="work" class="portfolio-section">
-    <div class="container">
+    <div class="deck-section-container">
       <div class="section-header text-center">
         <span class="section-tag">FEATURED WORK</span>
-        <h2 class="section-title">Tap or Swipe to Watch</h2>
+        <h2 class="section-title">Swipe to Watch • Tap to Play</h2>
+        <p class="section-subtitle">Browse 41 real client reels across 7 industries. Swipe left/right or use the dock below.</p>
       </div>
 
-      <!-- Quick Category Switcher Pills -->
-      <div class="reels-pill-nav" id="reelsPillNav">
-        <!-- Rendered by app.js: [ 🏭 Factory ] [ ✨ Showroom ] [ 🗣️ Explainer ] [ 🐾 Pet Spa ] [ 🚀 Motion ] [ ✂️ Shorts ] -->
+      <!-- 1. The Peek-Ahead Swipable Carousel Track -->
+      <div class="reel-deck-wrapper" id="reelDeckWrapper">
+        <div class="reel-deck-track" id="reelDeckTrack">
+          <!-- Populated dynamically by app.js: 41 video cards + chapter transition cards with peeking edges -->
+        </div>
       </div>
 
-      <!-- Phone Showcase Wrap (Clean, 100% unblocked video view) -->
-      <div class="phone-showcase-wrapper">
-        <div class="phone-frame" id="phoneFrame">
-          <!-- Story Progress Bars at Top of Screen -->
-          <div class="story-progress-bar" id="storyProgressBar"></div>
+      <!-- 2. Minimal Thumb-Zone Dock (Directly under carousel) -->
+      <div class="thumb-dock-container">
+        <div class="thumb-dock" id="thumbDock">
+          <button class="dock-btn" id="dockPrevBtn" title="Previous Industry" aria-label="Previous Industry">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          
+          <button class="dock-category-pill" id="dockCatTrigger" title="Tap to choose industry" aria-label="Choose Industry">
+            <span class="dock-cat-icon" id="dockCatIcon">✨</span>
+            <span class="dock-cat-text" id="dockCatText">Luxury & Watches</span>
+            <span class="dock-cat-count" id="dockCatCount">1/3</span>
+            <i class="fa-solid fa-chevron-up dock-arrow-indicator"></i>
+          </button>
 
-          <!-- Active Reel Badge (Floating Top Left) -->
-          <div class="phone-badge" id="phoneBadge">
-            <span id="badgeIcon">✨</span>
-            <span id="badgeText">Luxury & Watches</span>
+          <button class="dock-btn" id="dockNextBtn" title="Next Industry" aria-label="Next Industry">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- 3. Active Reel Details & Direct WhatsApp CTA -->
+      <div class="deck-info-wrap">
+        <div class="deck-info-card" id="deckInfoCard">
+          <div class="deck-reel-meta">
+            <span class="deck-client-tag" id="deckClientTag">Client: Luxury Watch Collection</span>
+            <h3 class="deck-reel-title" id="deckReelTitle">Cartier Santos Carrée Showcase</h3>
+            <p class="deck-reel-desc" id="deckReelDesc">Macro reflections, elegant speed-curves, and gold-trimmed close-ups for high-end luxury timepieces.</p>
           </div>
-
-          <!-- 9:16 Video Player Screen (Clean YouTube embed - all controls work!) -->
-          <div class="phone-screen" id="phoneScreen"></div>
-        </div>
-      </div>
-
-      <!-- Clean Video Navigation Bar (Under Video - No Screen Blockage!) -->
-      <div class="reel-nav-bar">
-        <button class="reel-nav-btn" id="prevReelBtn">
-          <i class="fa-solid fa-chevron-left"></i> <span>Previous</span>
-        </button>
-        <span class="reel-step-counter" id="reelCounter">1 of 3</span>
-        <button class="reel-nav-btn reel-nav-next-btn" id="nextReelBtn">
-          <span>Next Video</span> <i class="fa-solid fa-chevron-right"></i>
-        </button>
-      </div>
-
-      <!-- Visual Thumbnail Strip (Passes the Dad Test!) -->
-      <div class="up-next-section">
-        <div class="up-next-header">
-          <span class="up-next-title"><i class="fa-solid fa-film"></i> <span id="upNextTitle">Tap Any Video to Watch</span></span>
-          <span class="up-next-hint">Swipe sideways & tap</span>
-        </div>
-        <div class="up-next-scroll" id="upNextStrip">
-          <!-- Populated dynamically by app.js: real visual thumbnails you can tap -->
-        </div>
-      </div>
-
-      <!-- Active Video Info Bar & Direct WhatsApp CTA -->
-      <div class="reel-info-card" id="reelInfoCard">
-        <!-- Quick In-Card Category Switcher -->
-        <div class="reel-category-bar">
-          <button class="cat-step-btn" id="prevCatBtn" title="Previous Industry">
-            <i class="fa-solid fa-angle-left"></i> <span>Prev Industry</span>
-          </button>
-          <span class="active-cat-name" id="activeCatName">✨ Luxury & Watches</span>
-          <button class="cat-step-btn" id="nextCatBtn" title="Next Industry">
-            <span>Next Industry</span> <i class="fa-solid fa-angle-right"></i>
-          </button>
-        </div>
-
-        <div class="reel-meta">
-          <span class="reel-client-tag" id="reelClientTag">Client: Shiv PVC Furniture</span>
-          <h3 class="reel-title" id="reelTitle">Shiv PVC Furniture - Factory Process & Beat Cuts</h3>
-          <p class="reel-desc" id="reelDesc">Dynamic beat-synced cuts showcasing raw PVC materials, cutting machinery, and seamless assembly.</p>
-        </div>
-        <div class="reel-cta-wrap">
-          <a id="reelWhatsappBtn" href="#" target="_blank" class="btn btn-primary btn-glow">
-            <i class="fa-brands fa-whatsapp"></i>
-            <span>Ask for an edit like this on WhatsApp</span>
-          </a>
+          <div class="deck-cta-wrap">
+            <a id="deckWhatsappBtn" href="#" target="_blank" class="btn btn-primary btn-glow">
+              <i class="fa-brands fa-whatsapp"></i>
+              <span>Ask for an edit like this on WhatsApp</span>
+            </a>
+          </div>
         </div>
       </div>
 
       <!-- Minimal Clue / Hint -->
       <p class="showcase-hint text-center" id="showcaseHint">
-        <i class="fa-solid fa-hand-pointer"></i> <span>Swipe sideways or tap thumbnails to watch • Continuous play across all 41 videos</span>
+        <i class="fa-solid fa-hand-pointer"></i> <span>Swipe sideways to explore • Tap any video to play with sound</span>
       </p>
     </div>
   </section>
+
+  <!-- 4. Category Bottom Drawer Modal (Triggered by Thumb Dock) -->
+  <div class="cat-drawer-backdrop" id="catDrawerBackdrop"></div>
+  <div class="cat-drawer" id="catDrawer" aria-hidden="true">
+    <div class="cat-drawer-handle"></div>
+    <div class="cat-drawer-header">
+      <div class="cat-drawer-title-group">
+        <h3 class="cat-drawer-title">Browse by Industry</h3>
+        <span class="cat-drawer-subtitle">Tap any category to jump straight to its reels</span>
+      </div>
+      <button class="cat-drawer-close" id="catDrawerClose" aria-label="Close Drawer">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="cat-drawer-grid" id="catDrawerGrid">
+      <!-- Populated dynamically by app.js: 2-column cards for all industries -->
+    </div>
+  </div>
 
   <!-- What I Can Do For Your Business (Services) -->
   <section id="services" class="services-section">
