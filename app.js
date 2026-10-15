@@ -195,7 +195,7 @@ function setActiveCard(newIndex, scrollIntoView = true) {
 
   if (currentItem.type === "video") {
     if (dockCatIcon) dockCatIcon.textContent = currentItem.category.icon;
-    if (dockCatText) dockCatText.textContent = currentItem.category.name;
+    if (dockCatText) dockCatText.textContent = currentItem.category.shortName || currentItem.category.name;
     if (dockCatCount) dockCatCount.textContent = `${currentItem.indexInCat + 1}/${currentItem.totalInCat}`;
 
     if (clientTag) clientTag.textContent = `Client: ${currentItem.video.client}`;
@@ -208,7 +208,7 @@ function setActiveCard(newIndex, scrollIntoView = true) {
     }
   } else if (currentItem.type === "chapter") {
     if (dockCatIcon) dockCatIcon.textContent = currentItem.category.icon;
-    if (dockCatText) dockCatText.textContent = `Up Next: ${currentItem.category.name}`;
+    if (dockCatText) dockCatText.textContent = `Up Next: ${currentItem.category.shortName || currentItem.category.name}`;
     if (dockCatCount) dockCatCount.textContent = `${currentItem.videoCount} Reels`;
 
     if (clientTag) clientTag.textContent = "Industry Showcase";
@@ -226,9 +226,23 @@ function setActiveCard(newIndex, scrollIntoView = true) {
 }
 
 /**
+ * Dismiss the first-visit floating micro-cue
+ */
+function dismissDockCue() {
+  const cue = document.getElementById("dockCueWrapper");
+  if (cue && !cue.classList.contains("dismissed")) {
+    cue.classList.add("dismissed");
+    setTimeout(() => {
+      if (cue.parentNode) cue.parentNode.removeChild(cue);
+    }, 450);
+  }
+}
+
+/**
  * Play video inside active card
  */
 function playVideoInCard(cardEl, video) {
+  dismissDockCue();
   if (activePlayingCard && activePlayingCard !== cardEl) {
     restoreCardThumbnail(activePlayingCard);
   }
@@ -267,6 +281,7 @@ function attachDeckEvents() {
 
   // 1. Scroll-snap listener with requestAnimationFrame
   track.addEventListener("scroll", () => {
+    dismissDockCue();
     if (!isScrollThrottled) {
       isScrollThrottled = true;
       requestAnimationFrame(() => {
@@ -278,6 +293,7 @@ function attachDeckEvents() {
 
   // 2. Click events on cards
   track.addEventListener("click", (e) => {
+    dismissDockCue();
     const cardEl = e.target.closest(".reel-card, .chapter-card");
     if (!cardEl) return;
 
@@ -299,25 +315,37 @@ function attachDeckEvents() {
     }
   });
 
-  // 3. Thumb-Zone Dock Previous / Next Industry
+  // 3. Floating Micro-Cue Click
+  const dockTapCue = document.getElementById("dockTapCue");
+  if (dockTapCue) {
+    dockTapCue.addEventListener("click", () => {
+      dismissDockCue();
+      toggleCatDrawer(true);
+    });
+  }
+
+  // 4. Thumb-Zone Dock Previous / Next Industry
   const dockPrevBtn = document.getElementById("dockPrevBtn");
   const dockNextBtn = document.getElementById("dockNextBtn");
   const dockCatTrigger = document.getElementById("dockCatTrigger");
 
   if (dockPrevBtn) {
     dockPrevBtn.addEventListener("click", () => {
+      dismissDockCue();
       jumpToAdjacentCategory(-1);
     });
   }
 
   if (dockNextBtn) {
     dockNextBtn.addEventListener("click", () => {
+      dismissDockCue();
       jumpToAdjacentCategory(1);
     });
   }
 
   if (dockCatTrigger) {
     dockCatTrigger.addEventListener("click", () => {
+      dismissDockCue();
       toggleCatDrawer(true);
     });
   }

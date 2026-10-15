@@ -14,14 +14,14 @@ const PORTFOLIO_CONFIG = {
 
 // 8 Categories (All Work + 7 Core Business Verticals)
 const PORTFOLIO_CATEGORIES = [
-  { id: "all", name: "All 41 Reels", icon: "🎬" },
-  { id: "luxury", name: "Luxury & Watches", icon: "✨" },
-  { id: "fabrics", name: "Fabrics & Fashion", icon: "👗" },
-  { id: "auto", name: "Cars & Showrooms", icon: "🚗" },
-  { id: "factory", name: "Factory & Process", icon: "🏭" },
-  { id: "furniture", name: "Furniture & Interior", icon: "🛋️" },
-  { id: "explainer", name: "Talking Head & Explainers", icon: "🗣️" },
-  { id: "lifestyle", name: "Lifestyle, Pets & Events", icon: "🐾" }
+  { id: "all", name: "All 41 Client Reels", shortName: "All 41 Reels", icon: "🎬" },
+  { id: "luxury", name: "Luxury & Watches", shortName: "Luxury Items", icon: "✨" },
+  { id: "fabrics", name: "Fabrics & Fashion", shortName: "Fabrics & Silk", icon: "👗" },
+  { id: "auto", name: "Cars & Showrooms", shortName: "Cars & Auto", icon: "🚗" },
+  { id: "factory", name: "Factory & Process", shortName: "Factory Process", icon: "🏭" },
+  { id: "furniture", name: "Furniture & Interior", shortName: "Furniture & Decor", icon: "🛋️" },
+  { id: "explainer", name: "Talking Head & Explainers", shortName: "Talking Head", icon: "🗣️" },
+  { id: "lifestyle", name: "Lifestyle, Pets & Events", shortName: "Pets & Lifestyle", icon: "🐾" }
 ];
 
 // All 41 Unlisted Client Videos

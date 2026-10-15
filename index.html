@@ -115,6 +115,15 @@
 
       <!-- 2. Minimal Thumb-Zone Dock (Directly under carousel) -->
       <div class="thumb-dock-container">
+        <!-- Floating Micro-Cue (Fades out after first tap/swipe) -->
+        <div class="dock-cue-wrapper" id="dockCueWrapper">
+          <div class="dock-tap-cue" id="dockTapCue">
+            <span class="cue-hand"><i class="fa-solid fa-hand-pointer"></i></span>
+            <span class="cue-text">Tap to browse 7 industries</span>
+            <i class="fa-solid fa-chevron-down cue-arrow"></i>
+          </div>
+        </div>
+
         <div class="thumb-dock" id="thumbDock">
           <button class="dock-btn" id="dockPrevBtn" title="Previous Industry" aria-label="Previous Industry">
             <i class="fa-solid fa-chevron-left"></i>
@@ -122,9 +131,12 @@
           
           <button class="dock-category-pill" id="dockCatTrigger" title="Tap to choose industry" aria-label="Choose Industry">
             <span class="dock-cat-icon" id="dockCatIcon">✨</span>
-            <span class="dock-cat-text" id="dockCatText">Luxury & Watches</span>
+            <span class="dock-cat-text" id="dockCatText">Luxury Items</span>
             <span class="dock-cat-count" id="dockCatCount">1/3</span>
-            <i class="fa-solid fa-chevron-up dock-arrow-indicator"></i>
+            <span class="dock-action-badge">
+              <i class="fa-solid fa-layer-group"></i>
+              <i class="fa-solid fa-chevron-up dock-arrow-indicator"></i>
+            </span>
           </button>
 
           <button class="dock-btn" id="dockNextBtn" title="Next Industry" aria-label="Next Industry">
