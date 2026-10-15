@@ -763,20 +763,112 @@ img {
   color: var(--accent-blue);
 }
 
-/* Mobile Adjustments for Phone Frame */
-@media (max-width: 640px) {
+/* ==========================================================================
+   Mobile-First Player Transformation (Full Comfortable Width on Phones)
+   ========================================================================== */
+@media (max-width: 768px) {
+  /* 1. Horizontal single-row swipeable category pills (no vertical clutter) */
+  .reels-pill-nav {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 0 16px 10px;
+    margin-bottom: 14px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .reels-pill-nav::-webkit-scrollbar {
+    display: none;
+  }
+  .reel-nav-pill {
+    flex-shrink: 0;
+    padding: 7px 14px;
+    font-size: 0.82rem;
+  }
+
+  /* 2. Container expands to full comfortable phone width */
   .phone-showcase-wrapper {
-    gap: 8px;
+    position: relative;
+    width: 100%;
+    max-width: 390px;
+    margin: 0 auto;
+    padding: 0 8px;
+    display: flex;
+    justify-content: center;
   }
-  .nav-arrow {
-    width: 42px;
-    height: 42px;
-    font-size: 1rem;
-  }
+
+  /* 3. The video player fills the real screen (no fake thick bezel!) */
   .phone-frame {
-    width: 280px;
-    border-width: 8px;
-    border-radius: 36px;
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 9 / 16;
+    border: 1.5px solid var(--border-color); /* Clean modern card border */
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  }
+
+  /* 4. Hide fake camera notch on mobile (you're already on a real phone) */
+  .phone-island {
+    display: none;
+  }
+
+  /* 5. Story progress bars sit right at the top of the video */
+  .story-progress-bar {
+    top: 10px;
+    left: 10px;
+    right: 10px;
+  }
+
+  /* 6. Floating category badge inside the video */
+  .phone-badge {
+    top: 22px;
+    left: 10px;
+  }
+
+  /* 7. Side arrows float cleanly over the video edges */
+  .nav-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    font-size: 1rem;
+    color: #090d16;
+    z-index: 25;
+  }
+  .nav-prev {
+    left: 14px;
+  }
+  .nav-next {
+    right: 14px;
+  }
+
+  /* 8. Metadata card styling on mobile */
+  .reel-info-card {
+    margin: 16px auto 10px;
+    padding: 16px 14px;
+    width: 100%;
+    max-width: 390px;
+  }
+  .reel-title {
+    font-size: 1.05rem;
+  }
+
+  /* 9. Floating WhatsApp button doesn't block card buttons */
+  .floating-whatsapp {
+    bottom: 12px;
+    right: 12px;
+    padding: 10px 15px;
+    font-size: 0.85rem;
+    z-index: 50;
+  }
+  body {
+    padding-bottom: 85px;
   }
 }
 
@@ -1262,12 +1354,8 @@ img {
   margin-bottom: 16px;
 }
 
-/* Responsive adjustments */
+/* General Responsive adjustments */
 @media (max-width: 768px) {
-  body {
-    padding-bottom: 75px;
-  }
-
   .hero {
     padding: 35px 0 25px;
   }
@@ -1283,23 +1371,6 @@ img {
 
   .stat-label {
     font-size: 0.7rem;
-  }
-
-  .video-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-  }
-
-  .video-overlay {
-    padding: 10px;
-  }
-
-  .video-card-title {
-    font-size: 0.82rem;
-  }
-
-  .video-card-client {
-    font-size: 0.72rem;
   }
 
   .services-compact-grid {
