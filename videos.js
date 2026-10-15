@@ -6,9 +6,9 @@
 
 const PORTFOLIO_CONFIG = {
   editorName: "Jay Edits",
-  tagline: "High-Retention Short-Form Video Editor",
+  tagline: "High-Retention Short-Form Video Production",
   whatsappNumber: "919662896697",
-  whatsappDefaultMsg: "Hi Jay! I saw your video editor portfolio and I'd like to discuss videos for my business.",
+  whatsappDefaultMsg: "Hi Jay! I saw your video portfolio and I'd like to discuss video production for my business.",
   location: "Gujarat, India"
 };
 
