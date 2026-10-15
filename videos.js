@@ -7,12 +7,12 @@
  */
 
 const PORTFOLIO_CONFIG = {
-  // Your details (Replace with your real details)
-  editorName: "Creative Edits",
+  // Your details
+  editorName: "Jay Edits",
   tagline: "High-Retention Video Editor",
   
-  // Your WhatsApp Number (Include country code without '+' or '-' e.g., '919876543210')
-  whatsappNumber: "919876543210",
+  // Your WhatsApp Number (91 for India + 10-digit number)
+  whatsappNumber: "919662896697",
   
   // Default WhatsApp message that opens when a client clicks "Let's Talk"
   whatsappDefaultMsg: "Hi! I saw your video editor portfolio and I'm interested in discussing videos for my business.",
