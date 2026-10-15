@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Video Editor Portfolio | High-Retention Reels & Shorts</title>
+  <meta name="description" content="Professional short-form video editor specializing in cinematic reels, factory manufacturing showcases, doctor explainers, and luxury showroom edits." />
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Floating Sticky WhatsApp Bar (for mobile screens) -->
+  <a id="floatingWhatsapp" href="#" target="_blank" class="floating-whatsapp" aria-label="Chat on WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+    <span>Chat on WhatsApp</span>
+  </a>
+
+  <!-- Header / Navigation -->
+  <header class="header">
+    <div class="container nav-container">
+      <div class="logo">
+        <span class="logo-badge">PRO</span>
+        <span class="logo-text">Creative<strong>Edits</strong></span>
+      </div>
+      <div class="nav-actions">
+        <a href="#work" class="nav-link">Work</a>
+        <a href="#services" class="nav-link">Services</a>
+        <a href="#pricing" class="nav-link">Pricing</a>
+        <a id="navWhatsappBtn" href="#" target="_blank" class="btn btn-whatsapp-sm">
+          <i class="fa-brands fa-whatsapp"></i>
+          <span>Let's Talk</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container hero-content">
+      <div class="badge-pill">
+        <span class="pulse-dot"></span>
+        <span>Available for New Projects • 48-hr Turnaround</span>
+      </div>
+      
+      <h1 class="hero-title">
+        I edit <span class="gradient-text">high-retention</span> short videos that turn views into customers.
+      </h1>
+      
+      <p class="hero-subtitle">
+        Beat-synced reels, cinematic factory process videos, and talking-head explainers with captions in 
+        <strong>Gujarati, Hindi & English</strong>.
+      </p>
+
+      <!-- Quick Commercial Trust Counters -->
+      <div class="trust-stats">
+        <div class="stat-item">
+          <span class="stat-number">7+</span>
+          <span class="stat-label">Years Editing Exp.</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">100+</span>
+          <span class="stat-label">Reels Delivered</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">24–48h</span>
+          <span class="stat-label">Turnaround</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">3</span>
+          <span class="stat-label">Languages (Guj/Hin/Eng)</span>
+        </div>
+      </div>
+
+      <!-- Hero Call To Action -->
+      <div class="hero-cta-group">
+        <a id="heroWhatsappBtn" href="#" target="_blank" class="btn btn-primary btn-glow">
+          <i class="fa-brands fa-whatsapp"></i>
+          <span>Message on WhatsApp</span>
+        </a>
+        <a href="#work" class="btn btn-secondary">
+          <i class="fa-solid fa-play"></i>
+          <span>Watch Portfolio</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Single Reel Phone Showcase (One Video at a Time) -->
+  <section id="work" class="portfolio-section">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="section-tag">FEATURED WORK</span>
+        <h2 class="section-title">Tap or Swipe to Watch</h2>
+      </div>
+
+      <!-- Quick Category Switcher Pills -->
+      <div class="reels-pill-nav" id="reelsPillNav">
+        <!-- Rendered by app.js: [ 🏭 Factory ] [ ✨ Showroom ] [ 🗣️ Explainer ] [ 🐾 Pet Spa ] [ 🚀 Motion ] [ ✂️ Shorts ] -->
+      </div>
+
+      <!-- Phone Showcase Wrap -->
+      <div class="phone-showcase-wrapper">
+        <!-- Prev Arrow Button -->
+        <button class="nav-arrow nav-prev" id="prevReelBtn" aria-label="Previous Video">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+        <!-- Smartphone Mockup Chassis -->
+        <div class="phone-frame" id="phoneFrame">
+          <!-- Story Progress Bars at Top of Screen -->
+          <div class="story-progress-bar" id="storyProgressBar">
+            <!-- Dynamically populated: 6 segments like Instagram Stories -->
+          </div>
+
+          <!-- Dynamic Island / Speaker cutout -->
+          <div class="phone-island">
+            <span class="phone-camera"></span>
+          </div>
+
+          <!-- Active Reel Badge (Floating Top Left) -->
+          <div class="phone-badge" id="phoneBadge">
+            <span id="badgeIcon">🏭</span>
+            <span id="badgeText">Factory & Process</span>
+          </div>
+
+          <!-- Tap Navigation Zones (Left = Prev, Right = Next) -->
+          <div class="tap-zone tap-left" id="tapLeftZone" title="Tap for Previous"></div>
+          <div class="tap-zone tap-right" id="tapRightZone" title="Tap for Next"></div>
+
+          <!-- 9:16 Video Player Screen -->
+          <div class="phone-screen" id="phoneScreen">
+            <!-- Injected by app.js: Thumbnail with Play Button OR YouTube player -->
+          </div>
+        </div>
+
+        <!-- Next Arrow Button -->
+        <button class="nav-arrow nav-next" id="nextReelBtn" aria-label="Next Video">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+
+      <!-- Active Video Info Bar & Direct WhatsApp CTA -->
+      <div class="reel-info-card" id="reelInfoCard">
+        <div class="reel-meta">
+          <span class="reel-client-tag" id="reelClientTag">Client: Shiv PVC Furniture</span>
+          <h3 class="reel-title" id="reelTitle">Shiv PVC Furniture - Factory Process & Beat Cuts</h3>
+          <p class="reel-desc" id="reelDesc">Dynamic beat-synced cuts showcasing raw PVC materials, cutting machinery, and seamless assembly.</p>
+        </div>
+        <div class="reel-cta-wrap">
+          <a id="reelWhatsappBtn" href="#" target="_blank" class="btn btn-primary btn-glow">
+            <i class="fa-brands fa-whatsapp"></i>
+            <span>Ask for an edit like this on WhatsApp</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Minimal Clue / Hint -->
+      <p class="showcase-hint text-center" id="showcaseHint">
+        <i class="fa-solid fa-hand-pointer"></i> <span>Tap left/right on the phone or use arrows to switch • <strong id="reelCounter">1 of 6</strong></span>
+      </p>
+    </div>
+  </section>
+
+  <!-- What I Can Do For Your Business (Services) -->
+  <section id="services" class="services-section">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="section-tag">WHAT I OFFER</span>
+        <h2 class="section-title">Edits Tailored to Your Business</h2>
+      </div>
+
+      <div class="services-compact-grid">
+        <!-- Service 1 -->
+        <div class="service-compact-card">
+          <div class="service-compact-icon"><i class="fa-solid fa-industry"></i></div>
+          <div class="service-compact-text">
+            <h3>Factory & Process</h3>
+            <p>Raw machinery and production turned into hypnotic beat-synced reels.</p>
+          </div>
+        </div>
+
+        <!-- Service 2 -->
+        <div class="service-compact-card">
+          <div class="service-compact-icon"><i class="fa-solid fa-gem"></i></div>
+          <div class="service-compact-text">
+            <h3>Showrooms & Retail</h3>
+            <p>Speed-ramps and luxury transitions for jewelry, fabrics, and cars.</p>
+          </div>
+        </div>
+
+        <!-- Service 3 -->
+        <div class="service-compact-card">
+          <div class="service-compact-icon"><i class="fa-solid fa-closed-captioning"></i></div>
+          <div class="service-compact-text">
+            <h3>Doctor & Explainer</h3>
+            <p>Dynamic subtitles in Gujarati, Hindi & English with retention zoom cuts.</p>
+          </div>
+        </div>
+
+        <!-- Service 4 -->
+        <div class="service-compact-card">
+          <div class="service-compact-icon"><i class="fa-solid fa-paw"></i></div>
+          <div class="service-compact-text">
+            <h3>Services & Lifestyle</h3>
+            <p>High-energy cuts for dog spas, salons, cafes, and family ceremonies.</p>
+          </div>
+        </div>
+
+        <!-- Service 5 -->
+        <div class="service-compact-card">
+          <div class="service-compact-icon"><i class="fa-solid fa-layer-group"></i></div>
+          <div class="service-compact-text">
+            <h3>Product Motion Ads</h3>
+            <p>No video? I animate your product catalog photos with 3D sweeps & music.</p>
+          </div>
+        </div>
+
+        <!-- Service 6 -->
+        <div class="service-compact-card">
+          <div class="service-compact-icon"><i class="fa-solid fa-scissors"></i></div>
+          <div class="service-compact-text">
+            <h3>YouTube to Shorts</h3>
+            <p>Repurposing podcasts and long videos into viral 60-second vertical clips.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works (Simple 4-Step Process) -->
+  <section class="process-section">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="section-tag">FAST & SIMPLE</span>
+        <h2 class="section-title">How We Work Together</h2>
+      </div>
+
+      <div class="process-flow">
+        <div class="flow-step">
+          <span class="flow-num">1</span>
+          <div class="flow-body">
+            <h4>Send Raw Clips</h4>
+            <p>Share phone/camera video via Google Drive or WhatsApp.</p>
+          </div>
+        </div>
+        <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        <div class="flow-step">
+          <span class="flow-num">2</span>
+          <div class="flow-body">
+            <h4>I Edit The Magic</h4>
+            <p>Beats, captions in 3 languages, sound design & cuts.</p>
+          </div>
+        </div>
+        <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        <div class="flow-step">
+          <span class="flow-num">3</span>
+          <div class="flow-body">
+            <h4>1 Free Revision</h4>
+            <p>Review the draft and request adjustments until happy.</p>
+          </div>
+        </div>
+        <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        <div class="flow-step">
+          <span class="flow-num">4</span>
+          <div class="flow-body">
+            <h4>Ready to Post</h4>
+            <p>Crisp 9:16 video delivered in 24 to 48 hours.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing & Inquiry Section -->
+  <section id="pricing" class="pricing-section">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="section-tag">PRICING</span>
+        <h2 class="section-title">Simple, Honest Rates</h2>
+      </div>
+
+      <div class="pricing-grid">
+        <!-- Single Reel Card -->
+        <div class="pricing-card">
+          <div class="pricing-header">
+            <h3>Single Reel</h3>
+            <div class="price">
+              <span class="currency">₹</span>
+              <span class="amount">2,000</span>
+              <span class="period">/ video</span>
+            </div>
+          </div>
+          <ul class="pricing-features">
+            <li><i class="fa-solid fa-check"></i> Up to 60-sec vertical video (9:16)</li>
+            <li><i class="fa-solid fa-check"></i> Subtitles in Gujarati, Hindi or English</li>
+            <li><i class="fa-solid fa-check"></i> <strong>1 Free Revision included</strong></li>
+            <li><i class="fa-solid fa-check"></i> 48-hour delivery turnaround</li>
+          </ul>
+          <a id="pricingCard1Btn" href="#" target="_blank" class="btn btn-outline">
+            <i class="fa-brands fa-whatsapp"></i> Order Single Video
+          </a>
+        </div>
+
+        <!-- Monthly Growth Package (Featured) -->
+        <div class="pricing-card featured">
+          <div class="popular-badge">BEST VALUE FOR SHOPS</div>
+          <div class="pricing-header">
+            <h3>Monthly Pack</h3>
+            <div class="price">
+              <span class="custom-quote">Discounted Bulk</span>
+              <span class="period">8 to 15 Reels/mo</span>
+            </div>
+          </div>
+          <ul class="pricing-features">
+            <li><i class="fa-solid fa-check"></i> 8 to 15 high-retention reels per month</li>
+            <li><i class="fa-solid fa-check"></i> <strong>Discounted rate per video</strong></li>
+            <li><i class="fa-solid fa-check"></i> Priority 24-hr turnaround</li>
+            <li><i class="fa-solid fa-check"></i> Custom branding & cover thumbnails</li>
+          </ul>
+          <a id="pricingCard2Btn" href="#" target="_blank" class="btn btn-primary">
+            <i class="fa-brands fa-whatsapp"></i> Get Monthly Quote
+          </a>
+        </div>
+
+        <!-- Custom / B2B Package -->
+        <div class="pricing-card">
+          <div class="pricing-header">
+            <h3>Factory & B2B</h3>
+            <div class="price">
+              <span class="custom-quote">Custom Quote</span>
+              <span class="period">Tour & Catalog</span>
+            </div>
+          </div>
+          <ul class="pricing-features">
+            <li><i class="fa-solid fa-check"></i> Full factory & process manufacturing tour</li>
+            <li><i class="fa-solid fa-check"></i> Product photo catalog animation</li>
+            <li><i class="fa-solid fa-check"></i> YouTube long-form to short repurposing</li>
+            <li><i class="fa-solid fa-check"></i> Direct priority WhatsApp support</li>
+          </ul>
+          <a id="pricingCard3Btn" href="#" target="_blank" class="btn btn-outline">
+            <i class="fa-brands fa-whatsapp"></i> Discuss Requirements
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section (Overcoming Client Objections) -->
+  <section class="faq-section">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="section-tag">COMMON QUESTIONS</span>
+        <h2 class="section-title">Frequently Asked Questions</h2>
+      </div>
+
+      <div class="faq-accordion">
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>How do I send you the raw video clips?</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+          <div class="faq-answer">
+            <p>You can simply upload your phone or camera videos to a Google Drive folder and send me the link on WhatsApp. If clips are small, you can even share them directly on WhatsApp document or Telegram!</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>Can you add subtitles in Gujarati or Hindi?</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+          <div class="faq-answer">
+            <p>Yes, absolutely! I specialize in dynamic, stylized captions in Gujarati, Hindi, and English so your local audience understands every single word clearly.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>Can I get a refund if I change my mind?</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+          <div class="faq-answer">
+            <p>Because time and creative work are invested immediately upon starting, I do not offer refunds. However, every project comes with 1 free revision round to adjust music, pacing, captions, or cuts until you are completely satisfied with the final video.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>How fast do you deliver?</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+          <div class="faq-answer">
+            <p>Standard delivery is 24 to 48 hours for individual reels. For monthly package clients, we set up a smooth calendar schedule so your Instagram is never dry.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA Footer -->
+  <footer class="footer">
+    <div class="container text-center">
+      <h2>Have a video in mind for your business?</h2>
+      <p>Let's chat directly on WhatsApp. Send me a quick "Hi" and tell me about your shop or factory.</p>
+      
+      <div class="footer-cta">
+        <a id="footerWhatsappBtn" href="#" target="_blank" class="btn btn-whatsapp-lg">
+          <i class="fa-brands fa-whatsapp"></i>
+          <span>Chat on WhatsApp (+91)</span>
+        </a>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© <span id="currentYear"></span> Video Editor Portfolio • Made for High-Growth Businesses.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Interactive 9:16 Video Modal Player -->
+  <div id="videoModal" class="video-modal" aria-hidden="true">
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+    <div class="modal-content">
+      <button class="modal-close" id="modalClose" aria-label="Close video">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="reel-player-container">
+        <!-- Player iframe / video element injected by app.js -->
+        <div id="videoPlayerWrapper" class="player-wrapper"></div>
+      </div>
+
+      <div class="modal-info">
+        <span class="modal-category" id="modalCategory">Factory Process</span>
+        <h3 class="modal-title" id="modalTitle">Video Title</h3>
+        <p class="modal-client" id="modalClient">Client: <span>Shiv PVC Furniture</span></p>
+        <p class="modal-desc" id="modalDesc">Detailed description of the edit.</p>
+        
+        <a id="modalWhatsappBtn" href="#" target="_blank" class="btn btn-whatsapp-sm btn-block">
+          <i class="fa-brands fa-whatsapp"></i>
+          <span>Ask for an edit like this</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="videos.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
