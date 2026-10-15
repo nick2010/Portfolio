@@ -1,165 +1,419 @@
 /**
  * =========================================================================
- * YOUR PORTFOLIO CONTENT & SETTINGS
+ * JAYEDITS - COMPLETE 41-VIDEO PORTFOLIO DATA
  * =========================================================================
- * To update your phone number, name, or videos, just edit this file!
- * You DO NOT need to touch HTML or CSS code.
  */
 
 const PORTFOLIO_CONFIG = {
-  // Your details
   editorName: "Jay Edits",
-  tagline: "High-Retention Video Editor",
-  
-  // Your WhatsApp Number (91 for India + 10-digit number)
+  tagline: "High-Retention Short-Form Video Editor",
   whatsappNumber: "919662896697",
-  
-  // Default WhatsApp message that opens when a client clicks "Let's Talk"
-  whatsappDefaultMsg: "Hi! I saw your video editor portfolio and I'm interested in discussing videos for my business.",
-  
-  // Optional socials
-  instagramHandle: "your.instagram.handle",
-  emailAddress: "contact@youredits.com",
+  whatsappDefaultMsg: "Hi Jay! I saw your video editor portfolio and I'd like to discuss videos for my business.",
   location: "Gujarat, India"
 };
 
-// The categories your clients can filter by
-const CATEGORIES = [
-  { id: "all", name: "All Videos", icon: "fa-solid fa-shapes" },
-  { id: "factory", name: "Factory & Process", icon: "fa-solid fa-industry" },
-  { id: "showroom", name: "Showroom & Luxury", icon: "fa-solid fa-gem" },
-  { id: "explainer", name: "Explainers & Captions", icon: "fa-solid fa-closed-captioning" },
-  { id: "lifestyle", name: "Services & Lifestyle", icon: "fa-solid fa-paw" },
-  { id: "motion", name: "Motion Graphics & Ads", icon: "fa-solid fa-layer-group" }
+// 6 Core Business Categories
+const PORTFOLIO_CATEGORIES = [
+  { id: "luxury", name: "Luxury & Watches", icon: "✨", count: 3 },
+  { id: "fabrics", name: "Fabrics & Fashion", icon: "👗", count: 8 },
+  { id: "auto", name: "Cars & Showrooms", icon: "🚗", count: 4 },
+  { id: "factory", name: "Factory & Process", icon: "🏭", count: 7 },
+  { id: "furniture", name: "Furniture & Interior", icon: "🛋️", count: 11 },
+  { id: "lifestyle", name: "Explainers & Lifestyle", icon: "🗣️", count: 8 }
 ];
 
-/**
- * YOUR VIDEOS LIST
- * To add a new video:
- * 1. Upload your vertical video as an "Unlisted" YouTube video or YouTube Short.
- * 2. Copy the video ID from the link (e.g. if the link is youtube.com/shorts/dQw4w9WgXcQ, the ID is 'dQw4w9WgXcQ').
- * 3. Add an entry below!
- */
-const VIDEOS_DATA = [
+// All 41 Unlisted Client Videos
+const ALL_VIDEOS = [
+  // -------------------------------------------------------------------------
+  // 1. LUXURY, WATCHES & JEWELRY (3 Videos)
+  // -------------------------------------------------------------------------
   {
     id: 1,
-    title: "Shiv PVC Furniture - Factory Process & Beat Cuts",
-    client: "Shiv PVC Furniture",
-    category: "factory",
-    tag: "Beat-Synced",
-    // Clean demo sample video (can be replaced with your unlisted YouTube ID)
-    youtubeId: "M7lc1UVf-VE",
-    thumbnail: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&auto=format&fit=crop&q=80",
-    description: "Dynamic beat-synced cuts showcasing raw PVC materials, cutting machinery, and seamless assembly into luxury modular furniture."
+    category: "luxury",
+    title: "Cartier Santos Carrée Showcase",
+    client: "Luxury Watch Collection",
+    tag: "Luxury Timepiece",
+    youtubeId: "_vAy2gVCWaY",
+    description: "Macro reflections, elegant speed-curves, and gold-trimmed close-ups for high-end luxury timepieces."
   },
   {
     id: 2,
-    title: "Jalaram Fabrics - Luxury Clothing Showroom Showcase",
-    client: "Jalaram Fabrics",
-    category: "showroom",
-    tag: "Luxury / Retail",
-    youtubeId: "M7lc1UVf-VE",
-    thumbnail: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&auto=format&fit=crop&q=80",
-    description: "Cinematic camera movement and speed-ramping highlighting fabric textures, grand showroom lighting, and premium clothing collections."
+    category: "luxury",
+    title: "Rolex Showcase Reel",
+    client: "Watch Collector Showcase",
+    tag: "High-End Luxury",
+    youtubeId: "s8Km1fq4HiU",
+    description: "Crisp lighting accents, sound-designed dial ticks, and luxury aesthetic framing."
   },
   {
     id: 3,
-    title: "Founder Explainer: Waterproof PVC Secrets (Captions)",
-    client: "Shiv PVC Furniture",
-    category: "explainer",
-    tag: "Talking Head",
-    youtubeId: "M7lc1UVf-VE",
-    thumbnail: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=600&auto=format&fit=crop&q=80",
-    description: "YouTube-style edutainment edit with stylized Gujarati & Hindi subtitles, subtle zoom punch-ins, B-roll cutaways, and sound effects."
+    category: "luxury",
+    title: "Jewelry Shop Showcase",
+    client: "Jewelry Boutique",
+    tag: "Jewelry & Gold",
+    youtubeId: "idNtN5a6qHQ",
+    description: "Sparkle highlights and elegant slow-motion showcasing bridal jewelry and ornaments."
   },
+
+  // -------------------------------------------------------------------------
+  // 2. LUXURY FABRICS & FASHION SHOWROOM (8 Videos)
+  // -------------------------------------------------------------------------
   {
     id: 4,
-    title: "Parmar Chairs - Manufacturing Behind-the-Scenes",
-    client: "Parmar Chair Works",
-    category: "factory",
-    tag: "Factory BTS",
-    youtubeId: "M7lc1UVf-VE",
-    thumbnail: "https://images.unsplash.com/photo-1503602642458-232111445657?w=600&auto=format&fit=crop&q=80",
-    description: "Fast-paced rhythmic montage showcasing welding, cushion molding, and ergonomic office chair testing."
+    category: "fabrics",
+    title: "Fabrics Showroom Intro with VO & Captions",
+    client: "Jalaram Fabrics",
+    tag: "Showroom Voiceover",
+    youtubeId: "PF0oT_QwygI",
+    description: "Showroom walkthrough with engaging voiceover, dynamic captions, and texture close-ups."
   },
   {
     id: 5,
-    title: "Mercedes Delivery Day - High Energy Trendy Reel",
-    client: "Auto Showroom",
-    category: "showroom",
-    tag: "Automotive",
-    youtubeId: "M7lc1UVf-VE",
-    thumbnail: "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=600&auto=format&fit=crop&q=80",
-    description: "Celebratory car delivery edit with trendy bass drops, camera whip-pans, and emotional family moments."
+    category: "fabrics",
+    title: "Pure Linen Fabric Showcase",
+    client: "Textile Showroom",
+    tag: "Premium Linen",
+    youtubeId: "A4IZLaRZDks",
+    description: "Highlighting breathable fabric weave, drape movement, and natural textures."
   },
   {
     id: 6,
-    title: "Dog Spa Grooming - Pampering Experience",
-    client: "Paws & Bubbles Spa",
-    category: "lifestyle",
-    tag: "Pet Care",
-    youtubeId: "M7lc1UVf-VE",
-    thumbnail: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=600&auto=format&fit=crop&q=80",
-    description: "Wholesome, high-retention reel of dog washing, blow-drying, and styling set to upbeat cheerful rhythm."
+    category: "fabrics",
+    title: "Luxurious Fabric Showroom Tour",
+    client: "Luxury Textile Boutique",
+    tag: "Showroom Aesthetic",
+    youtubeId: "YgdI5sw9TUA",
+    description: "Speed-ramped camera motion gliding through rolls of luxury suitings and shirtings."
   },
   {
     id: 7,
-    title: "Doctor Health Advice - High-Retention Subtitles",
-    client: "Medical Clinic",
-    category: "explainer",
-    tag: "Educational",
-    youtubeId: "M7lc1UVf-VE",
-    thumbnail: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=600&auto=format&fit=crop&q=80",
-    description: "Fast-paced medical explainer with bold word-by-word animated captions, medical diagrams, and retention sound design."
+    category: "fabrics",
+    title: "Fabrics Showroom Highlight Reel",
+    client: "Textile Boutique",
+    tag: "Beat-Synced Reel",
+    youtubeId: "rdM90Od0D-Y",
+    description: "Beat-matched cuts and lighting transitions highlighting premium fashion fabrics."
   },
   {
     id: 8,
-    title: "Sky Sleep Mattress - Motion Graphics Product Ad",
-    client: "Sky Sleep Mattress",
-    category: "motion",
-    tag: "Motion Graphics",
-    youtubeId: "M7lc1UVf-VE",
-    thumbnail: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&auto=format&fit=crop&q=80",
-    description: "Created entirely from raw catalog photos: animated layer separation, orthopedic layer breakdown, typography, and punchy transitions."
+    category: "fabrics",
+    title: "Fabrics Collection Showcase",
+    client: "Textile Merchant",
+    tag: "Fabric Collection",
+    youtubeId: "BoMHh9XdD38",
+    description: "Vibrant color grading and crisp camera focus highlighting festive fabric collections."
   },
   {
     id: 9,
-    title: "Sky Sleep - Hypnotic Mattress Manufacturing Process",
-    client: "Sky Sleep Factory",
-    category: "factory",
-    tag: "Process Video",
-    youtubeId: "M7lc1UVf-VE",
-    thumbnail: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600&auto=format&fit=crop&q=80",
-    description: "Spring coiling, foam compression, and industrial fabric stitching synchronized to rhythmic percussion."
+    category: "fabrics",
+    title: "Designer Fabric Showcase",
+    client: "Fashion Showroom",
+    tag: "Designer Wear",
+    youtubeId: "ijBxooXbCE4",
+    description: "Smooth panning shots and speed-ramps showcasing embroidery and premium weaves."
   },
   {
     id: 10,
-    title: "Griha Pravesh - New House Pooja Cinematic",
-    client: "Family Event",
-    category: "lifestyle",
-    tag: "Event & Ritual",
-    youtubeId: "M7lc1UVf-VE",
-    thumbnail: "https://images.unsplash.com/photo-1609234656388-0ff363383899?w=600&auto=format&fit=crop&q=80",
-    description: "Warm color grading, slow-motion traditional pooja highlights, and aesthetic home tour transitions."
+    category: "fabrics",
+    title: "Luxury Textile Showcase",
+    client: "Textile Showroom",
+    tag: "Luxury Retail",
+    youtubeId: "1uwzvBPFVu4",
+    description: "Modern retail reel with rhythmic music cuts and store ambience."
   },
   {
     id: 11,
-    title: "Jewelry & Ethnic Wear - Festive Collection",
-    client: "Heritage Boutique",
-    category: "showroom",
-    tag: "Jewelry & Gold",
-    youtubeId: "M7lc1UVf-VE",
-    thumbnail: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&auto=format&fit=crop&q=80",
-    description: "Macro sparkle zooms, elegant speed-curves, and gold reflection grading for festival marketing."
+    category: "fabrics",
+    title: "Premium Fabric Showroom Showcase",
+    client: "Luxury Fabrics",
+    tag: "Showroom Highlights",
+    youtubeId: "yGVLMdDLWQg",
+    description: "Elegant store display tour designed to attract local foot traffic."
   },
+
+  // -------------------------------------------------------------------------
+  // 3. AUTOMOTIVE & CAR DELIVERIES (4 Videos)
+  // -------------------------------------------------------------------------
   {
     id: 12,
-    title: "Long-form Podcast Repurposing to Viral Short",
-    client: "Creator Channel",
-    category: "explainer",
-    tag: "Repurposing",
-    youtubeId: "M7lc1UVf-VE",
-    thumbnail: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=600&auto=format&fit=crop&q=80",
-    description: "Extracting a 45-second golden insight from a 1-hour interview: dual-speaker tracking, kinetic text, and background ambient music."
+    category: "auto",
+    title: "Mercedes-Benz Luxury Delivery Day",
+    client: "Mercedes-Benz Showroom",
+    tag: "Luxury Delivery",
+    youtubeId: "pNyfVw09yM4",
+    description: "High-energy bass drops, cinematic car reveals, and celebratory customer delivery moments."
+  },
+  {
+    id: 13,
+    category: "auto",
+    title: "Mercedes-Benz Delivery Celebration",
+    client: "Luxury Auto Dealer",
+    tag: "Car Delivery",
+    youtubeId: "CBMlqM-C53E",
+    description: "Emotional family celebration and car key handover with premium cinematic color grading."
+  },
+  {
+    id: 14,
+    category: "auto",
+    title: "Hyundai Creta Delivery Reel",
+    client: "Hyundai Showroom",
+    tag: "SUV Delivery",
+    youtubeId: "U3hxx2JWHa8",
+    description: "Trendy whip-pan transitions and celebratory confetti shots for newly delivered Creta."
+  },
+  {
+    id: 15,
+    category: "auto",
+    title: "Hyundai Venue Car Purchase",
+    client: "Auto Dealership",
+    tag: "Showroom Delivery",
+    youtubeId: "EPuOAbalomU",
+    description: "Fast-paced festive car delivery edit with trendy upbeat music beats."
+  },
+
+  // -------------------------------------------------------------------------
+  // 4. FACTORY & MANUFACTURING BTS (7 Videos)
+  // -------------------------------------------------------------------------
+  {
+    id: 16,
+    category: "factory",
+    title: "PVC Furniture Manufacturing Process",
+    client: "Shiv PVC Furniture",
+    tag: "Factory Machinery",
+    youtubeId: "XDPuqR6vdP0",
+    description: "Precision CNC cutting, edge banding, and sheet manufacturing synchronized to heavy rhythm."
+  },
+  {
+    id: 17,
+    category: "factory",
+    title: "Chair Manufacturing & Assembly",
+    client: "Parmar Chair Works",
+    tag: "Chair Production",
+    youtubeId: "h_rXe6F1cls",
+    description: "Behind-the-scenes factory welding, cushion press molding, and ergonomic testing."
+  },
+  {
+    id: 18,
+    category: "factory",
+    title: "Mattress Production & Manufacturing",
+    client: "Sky Sleep Mattress",
+    tag: "Factory Assembly",
+    youtubeId: "Klj_bYkXq9A",
+    description: "Industrial spring coiling, foam compression, and outer fabric quilting in action."
+  },
+  {
+    id: 19,
+    category: "factory",
+    title: "Mattress Showroom Renovation Process",
+    client: "Showroom Renovation",
+    tag: "Transformation BTS",
+    youtubeId: "uAsBT-kTR54",
+    description: "Time-lapse and montage of raw construction turning into a luxury retail showroom."
+  },
+  {
+    id: 20,
+    category: "factory",
+    title: "Baking Shop Manufacturing Process Demo",
+    client: "Bakery / Food",
+    tag: "Food Production",
+    youtubeId: "huWFSY2DUQw",
+    description: "Hypnotic baking process: dough kneading, oven baking, and dessert finishing."
+  },
+  {
+    id: 21,
+    category: "factory",
+    title: "Mattress Showroom Renovation Reveal",
+    client: "Retail Showroom",
+    tag: "Renovation Reveal",
+    youtubeId: "Gh1mV6Dqrbo",
+    description: "Before-and-after walkthrough of renovated showroom lighting and display areas."
+  },
+  {
+    id: 22,
+    category: "factory",
+    title: "PVC Furniture Before / After Transformation",
+    client: "Interior Works",
+    tag: "Before & After",
+    youtubeId: "kflYV4sVBd8",
+    description: "Dramatic transition from empty cement room to fully furnished waterproof PVC interior."
+  },
+
+  // -------------------------------------------------------------------------
+  // 5. FURNITURE & MATTRESS SHOWCASES (11 Videos)
+  // -------------------------------------------------------------------------
+  {
+    id: 23,
+    category: "furniture",
+    title: "Customer Feedback & Furniture Showcase",
+    client: "Shiv PVC Furniture",
+    tag: "Client Review",
+    youtubeId: "I5-iifhpJRo",
+    description: "Real customer review testimonial blended with cinematic shots of completed home furniture."
+  },
+  {
+    id: 24,
+    category: "furniture",
+    title: "PVC Modular Furniture Showcase",
+    client: "Shiv PVC Furniture",
+    tag: "Modular Furniture",
+    youtubeId: "8KiyWLyCOgI",
+    description: "Glossy laminate finishes, soft-close drawers, and modern bedroom wardrobe showcases."
+  },
+  {
+    id: 25,
+    category: "furniture",
+    title: "Sofa Chair Showroom Showcase",
+    client: "Furniture Gallery",
+    tag: "Living Room",
+    youtubeId: "rgDJJik5leA",
+    description: "Comfort testing, velvet upholstery detail, and living room aesthetic styling."
+  },
+  {
+    id: 26,
+    category: "furniture",
+    title: "Luxury Lounge Chair Showcase",
+    client: "Design Furniture",
+    tag: "Luxury Accent",
+    youtubeId: "7wtiiQyY7Rk",
+    description: "Smooth 360-degree rotational shots highlighting luxury armchair craftsmanship."
+  },
+  {
+    id: 27,
+    category: "furniture",
+    title: "Luxury Sofa Chair Showcase",
+    client: "Furniture Studio",
+    tag: "Sofa Showcase",
+    youtubeId: "7Uaw7Q5eky0",
+    description: "Speed-ramping through premium sofa finishes, cushioning, and stitching."
+  },
+  {
+    id: 28,
+    category: "furniture",
+    title: "Complete Home Furniture Showcase",
+    client: "Interior Studio",
+    tag: "Full Interior",
+    youtubeId: "ItOTGRZMjjc",
+    description: "Walkthrough of custom TV units, wardrobes, modular kitchen, and ceilings."
+  },
+  {
+    id: 29,
+    category: "furniture",
+    title: "Mattress Orthopedic Product Intro",
+    client: "Sky Sleep Mattress",
+    tag: "Product Intro",
+    youtubeId: "g6FZCV7T-Pg",
+    description: "Clean product showcase highlighting spine support, cooling gel, and firmness layers."
+  },
+  {
+    id: 30,
+    category: "furniture",
+    title: "Mattress Comfort & Softness Intro",
+    client: "Sky Sleep Mattress",
+    tag: "Product Showcase",
+    youtubeId: "k3q5y0ciC88",
+    description: "Slow-motion bounce tests and fabric texture zooms demonstrating plush comfort."
+  },
+  {
+    id: 31,
+    category: "furniture",
+    title: "Mattress Catalog Product Intro",
+    client: "Sky Sleep Mattress",
+    tag: "Product Feature",
+    youtubeId: "QjYAz2JH7TM",
+    description: "Kinetic text animations and benefit callouts engineered for commercial ads."
+  },
+  {
+    id: 32,
+    category: "furniture",
+    title: "Premium Mattress Range Showcase",
+    client: "Mattress Showroom",
+    tag: "Showroom Range",
+    youtubeId: "nd4F-fLEDpE",
+    description: "Side-by-side comparison of dual-comfort and memory foam mattress models."
+  },
+  {
+    id: 33,
+    category: "furniture",
+    title: "Luxury Mattress Collection Showcase",
+    client: "Mattress Brand",
+    tag: "Luxury Sleep",
+    youtubeId: "hPQQ1qioWYU",
+    description: "Aesthetic lifestyle framing showing sleep comfort and luxury bedroom setups."
+  },
+
+  // -------------------------------------------------------------------------
+  // 6. EXPLAINERS, PETS & LIFESTYLE (8 Videos)
+  // -------------------------------------------------------------------------
+  {
+    id: 34,
+    category: "lifestyle",
+    title: "PVC Furniture Waterproof Explainer",
+    client: "Shiv PVC Furniture",
+    tag: "Founder Explainer",
+    youtubeId: "J6hu3ZmVd30",
+    description: "Owner explaining 100% termite-proof & waterproof benefits with animated bullet captions."
+  },
+  {
+    id: 35,
+    category: "lifestyle",
+    title: "Furniture Founder Explainer (Talking Head)",
+    client: "Furniture Manufacturer",
+    tag: "Talking Head",
+    youtubeId: "5D-DidCaOxw",
+    description: "High-retention talking-head format with zoom punch-ins, Gujarati/Hindi subtitles & B-roll."
+  },
+  {
+    id: 36,
+    category: "lifestyle",
+    title: "PVC Material Breakdown Explainer",
+    client: "Interior Manufacturer",
+    tag: "Material Explainer",
+    youtubeId: "aEx_oCeGoQQ",
+    description: "Educational comparison showing why PVC outlasts traditional plywood in humid climates."
+  },
+  {
+    id: 37,
+    category: "lifestyle",
+    title: "Pet Grooming Spa - Full Pampering Reel",
+    client: "Paws & Bubbles Spa",
+    tag: "Pet Care Service",
+    youtubeId: "1WZ9oOdEbvU",
+    description: "Upbeat music sync of dog bathing, shampooing, blow drying, and cute reactions."
+  },
+  {
+    id: 38,
+    category: "lifestyle",
+    title: "Pet Grooming Spa - Haircut & Styling",
+    client: "Pet Spa Boutique",
+    tag: "Pet Grooming",
+    youtubeId: "BXEcODjdY0Q",
+    description: "Rhythmic scissors snips, nail trimming, and final adorable bandana reveal."
+  },
+  {
+    id: 39,
+    category: "lifestyle",
+    title: "Pet Grooming Spa - Bubble Bath Highlights",
+    client: "Dog Spa Clinic",
+    tag: "Pet Care",
+    youtubeId: "SmPVvMEDQ5E",
+    description: "High-retention wholesome reel engineered to drive local pet parent appointments."
+  },
+  {
+    id: 40,
+    category: "lifestyle",
+    title: "Navratri Festival & Birthday Celebration",
+    client: "Event Celebration",
+    tag: "Festival & Event",
+    youtubeId: "lQ_BqJ4cWVI",
+    description: "Vibrant Garba dance beats, traditional attire color grading, and festive family highlights."
+  },
+  {
+    id: 41,
+    category: "lifestyle",
+    title: "Viral Instagram Trend Edit",
+    client: "Social Media Trend",
+    tag: "Viral Trend",
+    youtubeId: "2TIWfAVVKM0",
+    description: "Algorithm-optimized beat cuts and trending sound effects designed for maximum viral reach."
   }
 ];

@@ -657,6 +657,20 @@ img {
   border: none;
 }
 
+.reel-pill-count {
+  font-size: 0.72rem;
+  padding: 1px 7px;
+  border-radius: var(--radius-pill);
+  background: #cbd5e1;
+  color: var(--text-primary);
+  font-weight: 800;
+}
+
+.reel-nav-pill.active .reel-pill-count {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
 /* Active Video Metadata Card */
 .reel-info-card {
   max-width: 440px;
@@ -667,6 +681,41 @@ img {
   border-radius: var(--radius-lg);
   padding: 18px 22px;
   box-shadow: var(--shadow-sm);
+}
+
+/* In-Card Quick Category Stepper */
+.reel-category-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8fafc;
+  border: 1px solid var(--border-color);
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  margin-bottom: 14px;
+}
+
+.cat-step-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  transition: all var(--transition-fast);
+}
+
+.cat-step-btn:hover {
+  background: #e2e8f0;
+  color: #090d16;
+}
+
+.active-cat-name {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--text-primary);
 }
 
 .reel-client-tag {
