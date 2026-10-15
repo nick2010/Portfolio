@@ -110,45 +110,43 @@
         <!-- Rendered by app.js: [ 🏭 Factory ] [ ✨ Showroom ] [ 🗣️ Explainer ] [ 🐾 Pet Spa ] [ 🚀 Motion ] [ ✂️ Shorts ] -->
       </div>
 
-      <!-- Phone Showcase Wrap -->
+      <!-- Phone Showcase Wrap (Clean, 100% unblocked video view) -->
       <div class="phone-showcase-wrapper">
-        <!-- Prev Arrow Button -->
-        <button class="nav-arrow nav-prev" id="prevReelBtn" aria-label="Previous Video">
-          <i class="fa-solid fa-chevron-left"></i>
-        </button>
-
-        <!-- Smartphone Mockup Chassis -->
         <div class="phone-frame" id="phoneFrame">
           <!-- Story Progress Bars at Top of Screen -->
-          <div class="story-progress-bar" id="storyProgressBar">
-            <!-- Dynamically populated: 6 segments like Instagram Stories -->
-          </div>
-
-          <!-- Dynamic Island / Speaker cutout -->
-          <div class="phone-island">
-            <span class="phone-camera"></span>
-          </div>
+          <div class="story-progress-bar" id="storyProgressBar"></div>
 
           <!-- Active Reel Badge (Floating Top Left) -->
           <div class="phone-badge" id="phoneBadge">
-            <span id="badgeIcon">🏭</span>
-            <span id="badgeText">Factory & Process</span>
+            <span id="badgeIcon">✨</span>
+            <span id="badgeText">Luxury & Watches</span>
           </div>
 
-          <!-- Tap Navigation Zones (Left = Prev, Right = Next) -->
-          <div class="tap-zone tap-left" id="tapLeftZone" title="Tap for Previous"></div>
-          <div class="tap-zone tap-right" id="tapRightZone" title="Tap for Next"></div>
-
-          <!-- 9:16 Video Player Screen -->
-          <div class="phone-screen" id="phoneScreen">
-            <!-- Injected by app.js: Thumbnail with Play Button OR YouTube player -->
-          </div>
+          <!-- 9:16 Video Player Screen (Clean YouTube embed - all controls work!) -->
+          <div class="phone-screen" id="phoneScreen"></div>
         </div>
+      </div>
 
-        <!-- Next Arrow Button -->
-        <button class="nav-arrow nav-next" id="nextReelBtn" aria-label="Next Video">
-          <i class="fa-solid fa-chevron-right"></i>
+      <!-- Clean Video Navigation Bar (Under Video - No Screen Blockage!) -->
+      <div class="reel-nav-bar">
+        <button class="reel-nav-btn" id="prevReelBtn">
+          <i class="fa-solid fa-chevron-left"></i> <span>Previous</span>
         </button>
+        <span class="reel-step-counter" id="reelCounter">1 of 3</span>
+        <button class="reel-nav-btn reel-nav-next-btn" id="nextReelBtn">
+          <span>Next Video</span> <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+
+      <!-- Visual Thumbnail Strip (Passes the Dad Test!) -->
+      <div class="up-next-section">
+        <div class="up-next-header">
+          <span class="up-next-title"><i class="fa-solid fa-film"></i> <span id="upNextTitle">Tap Any Video to Watch</span></span>
+          <span class="up-next-hint">Swipe sideways & tap</span>
+        </div>
+        <div class="up-next-scroll" id="upNextStrip">
+          <!-- Populated dynamically by app.js: real visual thumbnails you can tap -->
+        </div>
       </div>
 
       <!-- Active Video Info Bar & Direct WhatsApp CTA -->
@@ -179,7 +177,7 @@
 
       <!-- Minimal Clue / Hint -->
       <p class="showcase-hint text-center" id="showcaseHint">
-        <i class="fa-solid fa-hand-pointer"></i> <span>Tap left/right on phone or use arrows to switch • <strong id="reelCounter">1 of 3</strong></span>
+        <i class="fa-solid fa-hand-pointer"></i> <span>Swipe sideways or tap thumbnails to watch • Continuous play across all 41 videos</span>
       </p>
     </div>
   </section>

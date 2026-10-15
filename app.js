@@ -62,6 +62,9 @@ function getActiveCategory() {
 
 function getVideosInActiveCategory() {
   const activeCat = getActiveCategory();
+  if (!activeCat || activeCat.id === "all") {
+    return ALL_VIDEOS;
+  }
   return ALL_VIDEOS.filter(v => v.category === activeCat.id);
 }
 
@@ -78,7 +81,7 @@ function renderCategoryPills() {
   if (!container) return;
 
   container.innerHTML = PORTFOLIO_CATEGORIES.map((cat, index) => {
-    const count = ALL_VIDEOS.filter(v => v.category === cat.id).length;
+    const count = cat.id === "all" ? ALL_VIDEOS.length : ALL_VIDEOS.filter(v => v.category === cat.id).length;
     return `
       <button class="reel-nav-pill ${index === currentCatIndex ? 'active' : ''}" data-cat-index="${index}">
         <span>${cat.icon}</span>
@@ -120,8 +123,9 @@ function switchCategory(newCatIndex, autoPlay = false) {
     activeCatName.textContent = `${activeCat.icon} ${activeCat.name}`;
   }
 
-  // 3. Render Phone & Story Bars
+  // 3. Render Story Bars, Thumbnails & Load Video
   renderStoryBars();
+  renderUpNextStrip();
   loadCurrentVideo(autoPlay);
 }
 
@@ -133,12 +137,81 @@ function renderStoryBars() {
   if (!bar) return;
 
   const videos = getVideosInActiveCategory();
-  bar.innerHTML = videos.map((_, index) => {
-    let status = "";
-    if (index < currentVideoIndexInCat) status = "viewed";
-    else if (index === currentVideoIndexInCat) status = "active";
-    return `<div class="story-segment ${status}" data-video-index="${index}"></div>`;
+  if (videos.length <= 12) {
+    bar.innerHTML = videos.map((_, index) => {
+      let status = "";
+      if (index < currentVideoIndexInCat) status = "viewed";
+      else if (index === currentVideoIndexInCat) status = "active";
+      return `<div class="story-segment ${status}" data-video-index="${index}"></div>`;
+    }).join("");
+  } else {
+    // Continuous progress bar for "All 41 Reels" view
+    const pct = Math.max(4, Math.round(((currentVideoIndexInCat + 1) / videos.length) * 100));
+    bar.innerHTML = `<div class="story-continuous-fill" style="width: ${pct}%;"></div>`;
+  }
+}
+
+/**
+ * Render Visual "Up Next" Thumbnail Strip (Passes the Dad Test!)
+ */
+function renderUpNextStrip() {
+  const strip = document.getElementById("upNextStrip");
+  if (!strip) return;
+
+  const videos = getVideosInActiveCategory();
+  const activeCat = getActiveCategory();
+
+  // Update header text based on active category
+  const titleEl = document.getElementById("upNextTitle");
+  if (titleEl) {
+    if (activeCat.id === "all") {
+      titleEl.textContent = `All 41 Client Reels (${videos.length})`;
+    } else {
+      titleEl.textContent = `${activeCat.icon} ${activeCat.name} (${videos.length})`;
+    }
+  }
+
+  strip.innerHTML = videos.map((v, index) => {
+    const isActive = index === currentVideoIndexInCat;
+    const catObj = PORTFOLIO_CATEGORIES.find(c => c.id === v.category) || { icon: "🎬", name: "Reel" };
+    const thumbUrl = `https://img.youtube.com/vi/${v.youtubeId}/hqdefault.jpg`;
+
+    return `
+      <div class="up-next-card ${isActive ? 'active' : ''}" data-video-index="${index}" data-video-id="${v.id}" title="${escapeHtml(v.title)}">
+        <img src="${thumbUrl}" alt="${escapeHtml(v.title)}" loading="lazy" />
+        <div class="up-next-overlay">
+          <span class="card-top-badge">${isActive ? '<i class="fa-solid fa-play"></i> NOW' : `#${index + 1}`}</span>
+          <div class="card-bottom-info">
+            <span class="card-cat-tag">${catObj.icon} ${v.client || catObj.name}</span>
+            <span class="card-title-text">${escapeHtml(v.title)}</span>
+          </div>
+        </div>
+      </div>
+    `;
   }).join("");
+
+  // Attach tap event to each thumbnail
+  strip.querySelectorAll(".up-next-card").forEach(card => {
+    card.addEventListener("click", () => {
+      const idx = parseInt(card.getAttribute("data-video-index"), 10);
+      currentVideoIndexInCat = idx;
+      loadCurrentVideo(true);
+    });
+  });
+
+  scrollActiveThumbnailIntoView();
+}
+
+/**
+ * Center the active thumbnail in the horizontal strip
+ */
+function scrollActiveThumbnailIntoView() {
+  const strip = document.getElementById("upNextStrip");
+  if (!strip) return;
+  const activeCard = strip.querySelector(`.up-next-card[data-video-index="${currentVideoIndexInCat}"]`);
+  if (activeCard) {
+    activeCard.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  }
 }
 
 /**
@@ -157,10 +230,11 @@ function loadCurrentVideo(autoPlay = false) {
   // 2. Update Phone Floating Badge
   const badgeIcon = document.getElementById("badgeIcon");
   const badgeText = document.getElementById("badgeText");
-  if (badgeIcon) badgeIcon.textContent = activeCat.icon;
-  if (badgeText) badgeText.textContent = video.tag || activeCat.name;
+  const catObj = PORTFOLIO_CATEGORIES.find(c => c.id === video.category) || activeCat;
+  if (badgeIcon) badgeIcon.textContent = catObj.icon;
+  if (badgeText) badgeText.textContent = video.tag || catObj.name;
 
-  // 3. Update Video Screen
+  // 3. Update Video Screen (Clean YouTube Embed - 100% controls work natively!)
   const screen = document.getElementById("phoneScreen");
   if (screen) {
     if (autoPlay) {
@@ -168,12 +242,11 @@ function loadCurrentVideo(autoPlay = false) {
         <iframe 
           src="https://www.youtube-nocookie.com/embed/${video.youtubeId}?autoplay=1&rel=0&modestbranding=1&playsinline=1" 
           title="${escapeHtml(video.title)}" 
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" 
           allowfullscreen>
         </iframe>
       `;
     } else {
-      // Automatic high-quality YouTube thumbnail
       const thumbUrl = `https://img.youtube.com/vi/${video.youtubeId}/hqdefault.jpg`;
       screen.innerHTML = `
         <div class="phone-preview-box" id="phonePreviewBox">
@@ -186,7 +259,6 @@ function loadCurrentVideo(autoPlay = false) {
         </div>
       `;
 
-      // Tap play button to stream directly inside phone
       const previewBox = document.getElementById("phonePreviewBox");
       if (previewBox) {
         previewBox.addEventListener("click", () => {
@@ -196,7 +268,7 @@ function loadCurrentVideo(autoPlay = false) {
     }
   }
 
-  // 4. Update Video Metadata Card
+  // 4. Update Video Metadata Card & Bottom Navigation Counter
   const clientTag = document.getElementById("reelClientTag");
   const title = document.getElementById("reelTitle");
   const desc = document.getElementById("reelDesc");
@@ -207,16 +279,34 @@ function loadCurrentVideo(autoPlay = false) {
   if (clientTag) clientTag.textContent = `Client: ${video.client}`;
   if (title) title.textContent = video.title;
   if (desc) desc.textContent = video.description;
-  if (counter) counter.textContent = `${currentVideoIndexInCat + 1} of ${videosInCat.length}`;
+  
+  if (counter) {
+    counter.textContent = `${currentVideoIndexInCat + 1} of ${videosInCat.length}`;
+  }
 
   if (hintEl) {
     hintEl.innerHTML = `
-      <i class="fa-solid fa-hand-pointer"></i> 
-      <span>Tap left/right on phone to switch • <strong>${currentVideoIndexInCat + 1} of ${videosInCat.length} in ${escapeHtml(activeCat.name)}</strong></span>
+      <i class="fa-solid fa-play"></i> 
+      <span>Tap <strong>Next Video</strong> or tap any thumbnail below • <strong>Reel ${currentVideoIndexInCat + 1} of ${videosInCat.length} in ${escapeHtml(activeCat.name)}</strong></span>
     `;
   }
 
-  // 5. Pre-fill WhatsApp CTA with this exact video title
+  // 5. Update active thumbnail state in Up Next strip
+  const strip = document.getElementById("upNextStrip");
+  if (strip) {
+    strip.querySelectorAll(".up-next-card").forEach(c => {
+      const cIdx = parseInt(c.getAttribute("data-video-index"), 10);
+      const isNowActive = cIdx === currentVideoIndexInCat;
+      c.classList.toggle("active", isNowActive);
+      const badge = c.querySelector(".card-top-badge");
+      if (badge) {
+        badge.innerHTML = isNowActive ? '<i class="fa-solid fa-play"></i> NOW' : `#${cIdx + 1}`;
+      }
+    });
+    scrollActiveThumbnailIntoView();
+  }
+
+  // 6. Pre-fill WhatsApp CTA with this exact video title
   if (whatsappBtn) {
     const customMsg = `Hi Jay! I saw your portfolio video: "${video.title}" (${video.client}). I want a similar video for my business. Can we talk?`;
     whatsappBtn.href = `https://wa.me/${PORTFOLIO_CONFIG.whatsappNumber}?text=${encodeURIComponent(customMsg)}`;
@@ -224,43 +314,58 @@ function loadCurrentVideo(autoPlay = false) {
 }
 
 /**
- * Navigate to Next Video within category
+ * Navigate to Next Video (Continuous cross-category playback)
  */
-function nextVideo() {
+function nextVideo(autoPlay = true) {
   const videos = getVideosInActiveCategory();
   if (currentVideoIndexInCat < videos.length - 1) {
     currentVideoIndexInCat++;
-    loadCurrentVideo(false);
+    loadCurrentVideo(autoPlay);
   } else {
-    // Reached the end of category -> loop back to video 1
-    currentVideoIndexInCat = 0;
-    loadCurrentVideo(false);
+    // Seamless cross-category auto-advance:
+    if (PORTFOLIO_CATEGORIES[currentCatIndex].id !== "all") {
+      let nextCat = currentCatIndex + 1;
+      if (nextCat >= PORTFOLIO_CATEGORIES.length) nextCat = 1; // loop back to first vertical
+      switchCategory(nextCat, autoPlay);
+    } else {
+      currentVideoIndexInCat = 0;
+      loadCurrentVideo(autoPlay);
+    }
   }
 }
 
 /**
- * Navigate to Previous Video within category
+ * Navigate to Previous Video
  */
-function prevVideo() {
+function prevVideo(autoPlay = true) {
   const videos = getVideosInActiveCategory();
   if (currentVideoIndexInCat > 0) {
     currentVideoIndexInCat--;
-    loadCurrentVideo(false);
+    loadCurrentVideo(autoPlay);
   } else {
-    currentVideoIndexInCat = videos.length - 1;
-    loadCurrentVideo(false);
+    // Seamless cross-category reverse
+    if (PORTFOLIO_CATEGORIES[currentCatIndex].id !== "all") {
+      let prevCat = currentCatIndex - 1;
+      if (prevCat < 1) prevCat = PORTFOLIO_CATEGORIES.length - 1;
+      switchCategory(prevCat, autoPlay);
+      currentVideoIndexInCat = getVideosInActiveCategory().length - 1;
+      loadCurrentVideo(autoPlay);
+    } else {
+      currentVideoIndexInCat = videos.length - 1;
+      loadCurrentVideo(autoPlay);
+    }
   }
 }
 
 /**
- * Attach Event Listeners (Arrows, Steppers, Taps, Gestures, Keyboard)
+ * Attach Event Listeners (Nav Buttons, Steppers, Keyboard)
  */
 function attachShowcaseEvents() {
-  // 1. Navigation Arrows (Next / Prev Video)
+  // 1. Clean Navigation Bar Under Video
   const nextBtn = document.getElementById("nextReelBtn");
   const prevBtn = document.getElementById("prevReelBtn");
-  if (nextBtn) nextBtn.addEventListener("click", nextVideo);
-  if (prevBtn) prevBtn.addEventListener("click", prevVideo);
+  if (nextBtn) nextBtn.addEventListener("click", () => nextVideo(true));
+  if (prevBtn) prevBtn.addEventListener("click", () => prevVideo(true));
 
   // 2. In-Card Category Stepper (Prev / Next Industry)
   const prevCatBtn = document.getElementById("prevCatBtn");
@@ -276,45 +381,13 @@ function attachShowcaseEvents() {
     });
   }
 
-  // 3. Tap Zones (Left 25% = Prev, Right 25% = Next)
-  const tapLeft = document.getElementById("tapLeftZone");
-  const tapRight = document.getElementById("tapRightZone");
-  if (tapLeft) tapLeft.addEventListener("click", prevVideo);
-  if (tapRight) tapRight.addEventListener("click", nextVideo);
-
-  // 4. Keyboard Arrow Navigation
+  // 3. Keyboard Arrow Navigation
   document.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowRight") nextVideo();
-    if (e.key === "ArrowLeft") prevVideo();
+    if (e.key === "ArrowRight") nextVideo(true);
+    if (e.key === "ArrowLeft") prevVideo(true);
     if (e.key === "ArrowUp") switchCategory(currentCatIndex - 1, false);
     if (e.key === "ArrowDown") switchCategory(currentCatIndex + 1, false);
   });
-
-  // 5. Touch Swipe on Phone Mockup
-  const phoneFrame = document.getElementById("phoneFrame");
-  if (phoneFrame) {
-    phoneFrame.addEventListener("touchstart", (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-    }, { passive: true });
-
-    phoneFrame.addEventListener("touchend", (e) => {
-      touchEndX = e.changedTouches[0].screenX;
-      handleSwipe();
-    }, { passive: true });
-  }
-}
-
-function handleSwipe() {
-  const diffX = touchEndX - touchStartX;
-  if (Math.abs(diffX) > 40) {
-    if (diffX < 0) {
-      // Swiped Left -> Next Video
-      nextVideo();
-    } else {
-      // Swiped Right -> Prev Video
-      prevVideo();
-    }
-  }
 }
 
 /**

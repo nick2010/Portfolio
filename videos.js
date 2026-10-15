@@ -12,8 +12,9 @@ const PORTFOLIO_CONFIG = {
   location: "Gujarat, India"
 };
 
-// 7 Core Business Categories
+// 8 Categories (All Work + 7 Core Business Verticals)
 const PORTFOLIO_CATEGORIES = [
+  { id: "all", name: "All 41 Reels", icon: "🎬" },
   { id: "luxury", name: "Luxury & Watches", icon: "✨" },
   { id: "fabrics", name: "Fabrics & Fashion", icon: "👗" },
   { id: "auto", name: "Cars & Showrooms", icon: "🚗" },
